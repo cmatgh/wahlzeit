@@ -12,22 +12,22 @@ public class Coordinate{
         this.z = z;
     }
 
-    protected double getX(){
+    public double getX(){
         return x;
     }
 
-    protected double getY(){
+    public double getY(){
         return y;
     }
 
-    protected double getZ(){
+    public double getZ(){
         return z;
     }
 
     /**
      * Calculates the euklidian distance between the two coordinates
      */
-    protected double getDistance(Coordinate coordinate){
+    public double getDistance(Coordinate coordinate){
         if(null == coordinate){
             throw new IllegalArgumentException();
         }
@@ -39,7 +39,7 @@ public class Coordinate{
         return Math.sqrt(dx*dx + dy*dy + dz*dz);
     }
 
-    protected boolean isEqual(Coordinate coordinate){
+    public boolean isEqual(Coordinate coordinate){
         if(null == coordinate){
             return false;
         }

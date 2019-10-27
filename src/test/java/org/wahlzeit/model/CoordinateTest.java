@@ -71,6 +71,54 @@ public class CoordinateTest{
      *
      */
     @Test
+    public void equalsOnDifferentObjectType(){
+        Coordinate coordinate = new Coordinate(2d, 2d, 2d);
+        String noCoordinate = new String();
+        assertFalse(coordinate.equals(noCoordinate));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void isEqualOnNull(){
+        Coordinate coordinate = new Coordinate(2d, 2d, 2d);
+        assertFalse(coordinate.isEqual(null));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void isEqualOnSameObject(){
+        Coordinate coordinate = new Coordinate(2d, 2d, 2d);
+        assertTrue(coordinate.isEqual(coordinate));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void isEqualOnDifferentObjectDifferentValues(){
+        Coordinate coordinate1 = new Coordinate(2d, 2d, 2d);
+        Coordinate coordinate2 = new Coordinate(1d, 2d, 2d);
+        assertFalse(coordinate1.isEqual(coordinate2));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void isEqualOnDifferentObjectSameValues(){
+        Coordinate coordinate1 = new Coordinate(2d, 2d, 2d);
+        Coordinate coordinate2 = new Coordinate(2d, 2d, 2d);
+        assertTrue(coordinate1.equals(coordinate2));
+    }
+
+    /**
+     *
+     */
+    @Test
     public void getDistanceCalculatesCorrectly(){
         assertDistances(1d,2d,3d, 5d, 2d, 1d);
         assertDistances(-5.123d,2d,933d, -11d, 0.001d, 1d);
