@@ -2,9 +2,13 @@ package org.wahlzeit.model;
 
 public class Location{
 
-    public Coordinate coordinate;
+    private Coordinate coordinate;
 
     public Location(Coordinate coordinate){
+        setCoordinate(coordinate);
+    }
+
+    public void setCoordinate(Coordinate coordinate){
         if(null == coordinate){
             throw new IllegalArgumentException();
         }

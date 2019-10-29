@@ -81,6 +81,41 @@ public class CoordinateTest{
      *
      */
     @Test
+    public void compareHashCodeOfEqualCoordinates(){
+        Coordinate coordinate1 = new Coordinate(2d, 2d, 2d);
+        Coordinate coordinate2 = new Coordinate(2d, 2d, 2d);
+        assertEquals(coordinate1.hashCode(), coordinate2.hashCode());
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void compareHashCodeOfDifferentCoordinates(){
+        for(int i = 0; i < 10000; i++){
+            Coordinate coordinate1 = new Coordinate((double)i* 2d, 2d, 2d);
+            Coordinate coordinate2 = new Coordinate(2d, 1d, (double)i* 2d);
+            assertNotEquals(coordinate1.hashCode(), coordinate2.hashCode());
+        }
+    }
+
+
+    /**
+     *
+     */
+    @Test
+    public void whenHashCodesAreEqualEqualsIsEqual(){
+        for(int i = 0; i < 10000; i++){
+            Coordinate coordinate1 = new Coordinate((double)i* 2d, 2d, 2d);
+            Coordinate coordinate2 = new Coordinate((double)i* 2d, 1d, 2d);
+            assertEquals(coordinate1.equals(coordinate2), coordinate1.hashCode() == coordinate2.hashCode());
+        }
+    }
+
+    /**
+     *
+     */
+    @Test
     public void isEqualOnNull(){
         Coordinate coordinate = new Coordinate(2d, 2d, 2d);
         assertFalse(coordinate.isEqual(null));
