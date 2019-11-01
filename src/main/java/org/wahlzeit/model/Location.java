@@ -4,6 +4,10 @@ public class Location{
 
     private Coordinate coordinate;
 
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
     public Location(Coordinate coordinate){
         setCoordinate(coordinate);
     }
