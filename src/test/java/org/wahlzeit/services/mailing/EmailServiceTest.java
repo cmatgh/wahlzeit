@@ -38,8 +38,18 @@ public class EmailServiceTest {
 		validAddress = EmailAddress.getFromString("test@test.de");
 	}
 
+	@Test(expected = MailingException.class)
+	public void testSendInvalidEmailThrowsException() throws MailingException{
+			emailService.sendEmail(validAddress, null, "lol", "hi");
+	}
+
 	@Test
-	public void testSendInvalidEmail() {
+	public void testSendValidEmail() {
+		assertTrue(emailService.sendEmailIgnoreException(validAddress, validAddress, "hi", "test"));
+	}
+
+	@Test
+	public void testSendInvalidIgnoringExceptionEmail() {
 		try {
 			assertFalse(emailService.sendEmailIgnoreException(validAddress, null, "lol", "hi"));
 			assertFalse(emailService.sendEmailIgnoreException(null, validAddress, null, "body"));
@@ -50,7 +60,7 @@ public class EmailServiceTest {
 	}
 
 	@Test
-	public void testSendValidEmail() {
+	public void testSendValidEmailIgnoringException() {
 		try {
 			assertTrue(emailService.sendEmailIgnoreException(validAddress, validAddress, "hi", "test"));
 		} catch (Exception ex) {
