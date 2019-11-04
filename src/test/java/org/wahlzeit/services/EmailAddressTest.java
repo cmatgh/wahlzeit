@@ -21,6 +21,9 @@
 package org.wahlzeit.services;
 
 import junit.framework.TestCase;
+import org.junit.Test;
+
+import javax.mail.internet.AddressException;
 
 /**
  * Test cases for the EmailAddress class.
@@ -34,9 +37,35 @@ public class EmailAddressTest extends TestCase {
 		super(name);
 	}
 
+    /**
+     *
+     */
+    @Test
+    public void testConstructorSetsCorrectValue() {
+        String emailName = "bingo.bongo@web.de";
+        EmailAddress email = new EmailAddress(emailName);
+
+        assertTrue(emailName.equals(email.value));
+    }
+
 	/**
 	 *
 	 */
+	@Test
+	public void testGetEmailAddressReturnsCorrectEmail() {
+		String emailName = "bingo.bongo@web.de";
+
+		EmailAddress emailFirstRequest = EmailAddress.getFromString(emailName);
+		EmailAddress emailSecondRequest = EmailAddress.getFromString(emailName);
+
+		assertTrue(emailFirstRequest.asString().equals(emailName));
+		assertTrue(emailSecondRequest.asString().equals(emailName));
+	}
+
+	/**
+	 *
+	 */
+	@Test
 	public void testGetEmailAddressFromString() {
 		// invalid email addresses are allowed for local testing and online avoided by Google
 
@@ -46,7 +75,29 @@ public class EmailAddressTest extends TestCase {
 		assertTrue(createEmailAddressIgnoreException("bingo+bongo@bango"));
 	}
 
-	/**
+    /**
+     *
+     */
+    @Test
+    public void testIsEqualOnSameObject() {
+        EmailAddress email = EmailAddress.getFromString("bingo@bongo");
+
+        assertTrue(email.isEqual(email));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testIsEqualOnDifferentObject() {
+        EmailAddress email = EmailAddress.getFromString("bingo@bongo");
+        EmailAddress email2 = EmailAddress.getFromString("bingo@bongo2");
+
+        assertFalse(email.isEqual(email2));
+    }
+
+
+    /**
 	 *
 	 */
 	protected boolean createEmailAddressIgnoreException(String ea) {
