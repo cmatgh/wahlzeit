@@ -20,7 +20,7 @@
 
 package org.wahlzeit.apps;
 
-import org.wahlzeit.main.ServiceMain;
+import org.wahlzeit.main.LandscapesMain;
 import org.wahlzeit.services.LogBuilder;
 
 import javax.servlet.ServletContext;
@@ -55,7 +55,7 @@ public class Wahlzeit implements ServletContextListener {
 			log.config(LogBuilder.createSystemMessage().
 					addParameter("Root directory", rootDir).toString());
 
-			ServiceMain.getInstance().startUp(true, rootDir);
+			LandscapesMain.getInstance().startUp(true, rootDir);
 		} catch (Exception ex) {
 			log.warning(LogBuilder.createSystemMessage().
 					addException("Initializing context failed", ex).toString());
@@ -68,7 +68,7 @@ public class Wahlzeit implements ServletContextListener {
 	 */
 	public void contextDestroyed(ServletContextEvent sce) {
 		try {
-			ServiceMain.getInstance().shutDown();
+			LandscapesMain.getInstance().shutDown();
 		} catch (Exception ex) {
 			log.warning(LogBuilder.createSystemMessage().
 					addException("Shutting instance down failed", ex).toString());

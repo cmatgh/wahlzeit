@@ -23,10 +23,7 @@ package org.wahlzeit.main;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.VoidWork;
 import org.wahlzeit.handlers.*;
-import org.wahlzeit.model.AccessRights;
-import org.wahlzeit.model.EnglishModelConfig;
-import org.wahlzeit.model.GermanModelConfig;
-import org.wahlzeit.model.LanguageConfigs;
+import org.wahlzeit.model.*;
 import org.wahlzeit.services.ConfigDir;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.LogBuilder;
@@ -49,7 +46,7 @@ public class ServiceMain extends ModelMain {
 	/**
 	 *
 	 */
-	protected static ServiceMain instance = new ServiceMain();
+	protected static ServiceMain instance = null;
 
 	/**
 	 *
@@ -65,9 +62,22 @@ public class ServiceMain extends ModelMain {
 	 *
 	 */
 	public static ServiceMain getInstance() {
+		if(instance == null){
+			setInstance(new ServiceMain());
+		}
 		return instance;
 	}
 
+	/**
+	 * Method to set the singleton instance of ServiceMain.
+	 */
+	protected static synchronized void setInstance(ServiceMain serviceMain) {
+		if (instance != null) {
+			throw new IllegalStateException("attempt to initialize ServiceMain twice");
+		}
+
+		instance = serviceMain;
+	}
 	/**
 	 *
 	 */

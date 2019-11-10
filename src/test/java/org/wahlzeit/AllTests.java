@@ -4,6 +4,7 @@ package org.wahlzeit;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.wahlzeit.handlers.TellFriendTest;
+import org.wahlzeit.main.LandscapesMainTest;
 import org.wahlzeit.model.*;
 import org.wahlzeit.model.persistence.DatastoreAdapterTest;
 import org.wahlzeit.services.EmailServiceTestSuite;
@@ -29,6 +30,8 @@ import org.wahlzeit.utils.VersionTest;
         StringUtilTest.class,
         VersionTest.class,
         EmailServiceTestSuite.class,
+        LandscapePhotoTestSuite.class,
+        LandscapesMainTest.class,
 
 })
 
