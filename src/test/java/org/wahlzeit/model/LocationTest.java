@@ -7,11 +7,11 @@ import static org.junit.Assert.assertTrue;
 
 public class LocationTest {
 
-    Coordinate coordinate = null;
+    CartesianCoordinate coordinate = null;
 
     @Before
     public void setup() throws Exception {
-        coordinate = new Coordinate(1d,1d,1d);
+        coordinate = new CartesianCoordinate(1d,1d,1d);
     }
 
     /**
