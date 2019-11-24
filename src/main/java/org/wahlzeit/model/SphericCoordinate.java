@@ -2,9 +2,7 @@ package org.wahlzeit.model;
 
 import java.util.Objects;
 
-public class SphericCoordinate  implements Coordinate{
-
-    private static final double DELTA = 0.0001d;
+public class SphericCoordinate extends AbstractCoordinate{
 
     private double radius;
     private double theta;
@@ -20,22 +18,31 @@ public class SphericCoordinate  implements Coordinate{
         return phi;
     }
 
-    public SphericCoordinate(double radius, double theta, double phi){
-        if(radius < 0){
-            throw new IllegalArgumentException();
-        }
-        this.radius = radius;
-
+    private void setTheta(double theta){
         this.theta = theta %  Math.PI;
         if(this.theta < 0){
             this.theta += Math.PI;
         }
+    }
 
+    private void setPhi(double phi){
         this.phi = phi % (2 * Math.PI);
         if(this.phi < 0){
             this.phi +=  (2 * Math.PI);
         }
+    }
 
+    private void setRadius(double radius){
+        if(radius < 0){
+            throw new IllegalArgumentException();
+        }
+        this.radius = radius;
+    }
+
+    public SphericCoordinate(double radius, double theta, double phi){
+        setRadius(radius);
+        setTheta(theta);
+        setPhi(phi);
     }
 
     @Override
@@ -47,19 +54,9 @@ public class SphericCoordinate  implements Coordinate{
     }
 
     @Override
-    public double getCartesianDistance(Coordinate coordinate) {
-        if(null == coordinate){
-            throw new IllegalArgumentException();
-        }
-
-        SphericCoordinate c2 = coordinate.asSphericCoordinate();
-
-        return doGetCartesianDistance(this, c2);
-    }
-
-    private double doGetCartesianDistance(SphericCoordinate c1, SphericCoordinate c2){
-        return Math.sqrt(c1.getRadius()* c1.getRadius() + c2.getRadius() * c2.getRadius() - 2d * c1.getRadius() * c2.getRadius() * (Math.sin(c1.phi) * Math.sin(c2.phi) * Math.cos(c1.theta - c2.theta) + Math.cos(c1.phi) * Math.cos(c2.phi)));
-    }
+    protected double doGetCartesianDistance(Coordinate coordinate){
+        return asCartesianCoordinate().doGetCartesianDistance(coordinate);
+   }
 
     @Override
     public SphericCoordinate asSphericCoordinate() {
@@ -67,21 +64,16 @@ public class SphericCoordinate  implements Coordinate{
     }
 
     @Override
-    public double getCentralAngle(Coordinate coordinate) {
-       if(null == coordinate){
-           throw new IllegalArgumentException();
-       }
+    protected double doGetCentralAngle(Coordinate coordinate){
+        SphericCoordinate c1 = this.asSphericCoordinate();
+        SphericCoordinate c2 = coordinate.asSphericCoordinate();
 
-        return doGetCentralAngle(this,coordinate.asSphericCoordinate());
-    }
-
-    private double doGetCentralAngle(SphericCoordinate coordinate1, SphericCoordinate coordinate2){
-        if(coordinate1.getRadius() <= DELTA || coordinate2.getRadius() <= DELTA){
+        if(c1.getRadius() <= DELTA || c2.getRadius() <= DELTA){
             return 0;
         }
-        double dLong = Math.abs((coordinate1.getTheta() - Math.PI) - (coordinate2.getTheta() - Math.PI));
-        double lat1 = coordinate1.getPhi()- Math.PI/2;
-        double lat2 = coordinate2.getPhi()- Math.PI/2;
+        double dLong = Math.abs((c1.getTheta() - Math.PI) - (c2.getTheta() - Math.PI));
+        double lat1 = c1.getPhi()- Math.PI/2;
+        double lat2 = c2.getPhi()- Math.PI/2;
 
         double t1 = Math.cos(lat2) * Math.sin(dLong);
         double t2 = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLong);
@@ -90,21 +82,6 @@ public class SphericCoordinate  implements Coordinate{
             return 0;
         }
         return Math.abs(Math.atan(Math.sqrt(t1*t1 + t2*t2)/denom));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if(null == o){
-            return false;
-        }
-        if (this == o){
-            return true;
-        }
-        if (!(o instanceof Coordinate)){
-            return false;
-        }
-
-        return isEqual((Coordinate) o);
     }
 
     @Override
@@ -125,12 +102,12 @@ public class SphericCoordinate  implements Coordinate{
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRadius(), getPhi(), getTheta());
+        return Objects.hash(getRadius(), getTheta(), getPhi());
     }
 
     @Override
     public String toString(){
-        return "(" + getRadius() +", " + getPhi() + ", " + getTheta() + ")";
+        return "(" + getRadius() +", " + getTheta() + ", " + getPhi() + ")";
     }
 
 }

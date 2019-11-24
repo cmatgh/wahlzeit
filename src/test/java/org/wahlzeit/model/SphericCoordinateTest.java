@@ -5,22 +5,22 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 
-public class SphericCoordinateTest {
+public class SphericCoordinateTest extends AbstractCoordinateTest{
 
-    private final static CartesianCoordinate CARTESIAN_CENTER = new CartesianCoordinate(0d,0d,0d);
-    private final static SphericCoordinate SPHERIC_CENTER = new SphericCoordinate(0d,0d,0d);
-    private static final double DELTA = 0.0001d;
+    /**
+     *
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testNegativeRadiusCausesException(){
+        new SphericCoordinate(-2d, 0d, 0d);
+    }
 
-    private static final Coordinate[][]  CARTESIAN_SPHERIC_PAIRS = new Coordinate[][]{
-            { CARTESIAN_CENTER, new SphericCoordinate(0d,0d,0d)},
-            { new CartesianCoordinate(-3.594566816, 3.632106035, 1.806459287), new SphericCoordinate(5.42,2.351,1.231)},
-            { new CartesianCoordinate(-1426.596824, 158.4175098, 4149.891417),new SphericCoordinate(4391.113,3.031,0.333)},
-            { new CartesianCoordinate(-1.32655321, 3.412095991,-2.255627968), new SphericCoordinate(4.3,1.941592654,2.123)},
-            { new CartesianCoordinate(0d, 0d, 10d), new SphericCoordinate(10,2 * Math.PI,4 * Math.PI)}
-    };
-
-    @Test
+    /**
+     *
+     */
+    @Override
     public void testGettersReturnCorrectValues() {
+
         SphericCoordinate coordinate = new SphericCoordinate(1d,3d, 2d);
         assertEquals("getRadius returns wrong value",1d, coordinate.getRadius(), DELTA);
         assertEquals("getTheta returns wrong value",3d % Math.PI, coordinate.getTheta(), DELTA);
@@ -32,6 +32,9 @@ public class SphericCoordinateTest {
         assertEquals("getPhi returns wrong value",5d % (2 *Math.PI), coordinate.getPhi(), DELTA);
     }
 
+    /**
+     *
+     */
     @Test
     public void testAsCartesianCoordinate(){
         for(int i = 0; i < CARTESIAN_SPHERIC_PAIRS.length; i++){
@@ -45,30 +48,10 @@ public class SphericCoordinateTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetCartesianDistanceOnNullThrowsException(){
-        SPHERIC_CENTER.getCartesianDistance(null);
-    }
-
-    @Test
-    public void testGetCartesianDistance(){
-        Coordinate[][] sphericCoordinatePairs = new Coordinate[][]{
-                { SPHERIC_CENTER, SPHERIC_CENTER},
-                { CARTESIAN_SPHERIC_PAIRS[1][1], CARTESIAN_SPHERIC_PAIRS[2][1]},
-                { CARTESIAN_SPHERIC_PAIRS[1][1], CARTESIAN_SPHERIC_PAIRS[3][1]},
-                { CARTESIAN_SPHERIC_PAIRS[2][1], CARTESIAN_SPHERIC_PAIRS[3][1]},
-        };
-
-        double[] expected = new double[]{0d, 4388.109246794005d, 4.657557622059717d, 4392.692466627665d};
-
-        for(int i = 0; i < sphericCoordinatePairs.length; i++){
-            SphericCoordinate sphericCoordinate1 = (SphericCoordinate) sphericCoordinatePairs[i][0];
-            SphericCoordinate sphericCoordinate2 = (SphericCoordinate) sphericCoordinatePairs[i][1];
-            assertEquals(expected[i], sphericCoordinate1.getCartesianDistance(sphericCoordinate2), DELTA);
-        }
-    }
-
-    @Test
+    /**
+     *
+     */
+    @Override
     public void testAsSphericCoordinate(){
         Coordinate[] sphericCoordinates = new Coordinate[]{
                 CARTESIAN_SPHERIC_PAIRS[1][1],
@@ -85,12 +68,46 @@ public class SphericCoordinateTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetCentralAngleOnNullThrowsException(){
-        SPHERIC_CENTER.getCentralAngle(null);
+    /**
+     *
+     */
+    @Override
+    public void testGetCartesianDistance(){
+        Coordinate[][] coordinatePairs = buildCoordinatePairs(CoordinateType.SPHERIC);
+
+        for(int i = 0; i < coordinatePairs.length; i++){
+            SphericCoordinate cartesianCoordinate1 = (SphericCoordinate) coordinatePairs[i][0];
+            SphericCoordinate cartesianCoordinate2 = (SphericCoordinate) coordinatePairs[i][1];
+            assertEquals(calculateCartesianDistance(cartesianCoordinate1, cartesianCoordinate2)
+                    , cartesianCoordinate1.getCartesianDistance(cartesianCoordinate2)
+                    , DELTA);
+        }
     }
 
-    @Test
+
+    /**
+     *
+     */
+    @Override
+    public void testGetCartesianDistanceOnNullThrowsException(){
+        SPHERIC_CENTER.getCartesianDistance(null);
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void testGetCartesianDistanceOnSameObjectReturnsZero(){
+        for(int i = 0; i < CARTESIAN_SPHERIC_PAIRS.length; i++){
+            SphericCoordinate cartesianCoordinate = (SphericCoordinate) CARTESIAN_SPHERIC_PAIRS[i][CoordinateType.SPHERIC.ordinal()];
+            assertEquals(0d, cartesianCoordinate.getCartesianDistance(cartesianCoordinate), DELTA);
+        }
+    }
+
+    /**
+     *
+     */
+    @Override
     public void testGetCentralAngle(){
         Coordinate[][] sphericCoordinatePairs = new Coordinate[][]{
                 { SPHERIC_CENTER, SPHERIC_CENTER},
@@ -107,11 +124,20 @@ public class SphericCoordinateTest {
             assertEquals(expected[i], sphericCoordinate1.getCentralAngle(sphericCoordinate2), DELTA);
         }
     }
+
     /**
      *
      */
-    @Test
-    public void equalsOnNull(){
+    @Override
+    public void testGetCentralAngleOnNullThrowsException(){
+        SPHERIC_CENTER.getCentralAngle(null);
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void testEqualsOnNull(){
         SphericCoordinate coordinate = new SphericCoordinate(2d, 2d, 2d);
         assertFalse(coordinate.equals(null));
     }
@@ -119,8 +145,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void equalsOnSameObject(){
+    @Override
+    public void testEqualsOnSameObject(){
         SphericCoordinate coordinate = new SphericCoordinate(2d, 2d, 2d);
         assertTrue(coordinate.equals(coordinate));
     }
@@ -128,8 +154,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void equalsOnDifferentObjectDifferentValues(){
+    @Override
+    public void testEqualsOnDifferentObjectDifferentValues(){
         SphericCoordinate coordinate1 = new SphericCoordinate(2d, 2d, 2d);
         SphericCoordinate coordinate2 = new SphericCoordinate(1d, 2d, 2d);
         assertFalse(coordinate1.equals(coordinate2));
@@ -138,8 +164,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void equalsOnDifferentObjectSameValues(){
+    @Override
+    public void testEqualsOnDifferentObjectSameValues(){
         SphericCoordinate coordinate1 = new SphericCoordinate(2d, 2d, 2d);
         SphericCoordinate coordinate2 = new SphericCoordinate(2d, 2d, 2d);
         assertTrue(coordinate1.equals(coordinate2));
@@ -148,8 +174,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void equalsOnDifferentObjectType(){
+    @Override
+    public void testEqualsOnDifferentObjectType(){
         SphericCoordinate coordinate = new SphericCoordinate(2d, 2d, 2d);
         String noCoordinate = new String();
         assertFalse(coordinate.equals(noCoordinate));
@@ -158,8 +184,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void compareHashCodeOfEqualCoordinates(){
+    @Override
+    public void testCompareHashCodeOfEqualCoordinates(){
         SphericCoordinate coordinate1 = new SphericCoordinate(2d, 2d, 2d);
         SphericCoordinate coordinate2 = new SphericCoordinate(2d, 2d, 2d);
         assertEquals(coordinate1.hashCode(), coordinate2.hashCode());
@@ -168,8 +194,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void compareHashCodeOfDifferentCoordinates(){
+    @Override
+    public void testCompareHashCodeOfDifferentCoordinates(){
         for(int i = 0; i < 10000; i++){
             SphericCoordinate coordinate1 = new SphericCoordinate((double)i* 2d, 2d, 2d);
             SphericCoordinate coordinate2 = new SphericCoordinate(2d, 1d, (double)i* 2d);
@@ -181,8 +207,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void whenHashCodesAreEqualEqualsIsEqual(){
+    @Override
+    public void testWhenHashCodesAreEqualEqualsIsEqual(){
         for(int i = 0; i < 10000; i++){
             SphericCoordinate coordinate1 = new SphericCoordinate((double)i* 2d, 2d, 2d);
             SphericCoordinate coordinate2 = new SphericCoordinate((double)i* 2d, 1d, 2d);
@@ -193,8 +219,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void isEqualOnNull(){
+    @Override
+    public void testIsEqualOnNull(){
         SphericCoordinate coordinate = new SphericCoordinate(2d, 2d, 2d);
         assertFalse(coordinate.isEqual(null));
     }
@@ -202,8 +228,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void isEqualOnSameObject(){
+    @Override
+    public void testIsEqualOnSameObject(){
         SphericCoordinate coordinate = new SphericCoordinate(2d, 2d, 2d);
         assertTrue(coordinate.isEqual(coordinate));
     }
@@ -211,8 +237,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void isEqualOnDifferentObjectDifferentValues(){
+    @Override
+    public void testIsEqualOnDifferentObjectDifferentValues(){
         SphericCoordinate coordinate1 = new SphericCoordinate(2d, 2d, 2d);
         SphericCoordinate coordinate2 = new SphericCoordinate(1d, 2d, 2d);
         assertFalse(coordinate1.isEqual(coordinate2));
@@ -221,8 +247,8 @@ public class SphericCoordinateTest {
     /**
      *
      */
-    @Test
-    public void isEqualOnDifferentObjectSameValues(){
+    @Override
+    public void testIsEqualOnDifferentObjectSameValues(){
         SphericCoordinate coordinate1 = new SphericCoordinate(2d, 2d, 2d);
         SphericCoordinate coordinate2 = new SphericCoordinate(2d, 2d, 2d);
         assertTrue(coordinate1.equals(coordinate2));
