@@ -18,7 +18,7 @@ import org.wahlzeit.utils.VersionTest;
         TellFriendTest.class,
         DatastoreAdapterTest.class,
         AccessRightsTest.class,
-        CartesianCoordinateTest.class,
+        CoordinateTestSuite.class,
         FlagReasonTest.class,
         GenderTest.class,
         GuestTest.class,

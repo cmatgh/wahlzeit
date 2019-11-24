@@ -7,69 +7,34 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class CartesianCoordinateTest {
+public class CartesianCoordinateTest extends AbstractCoordinateTest{
 
-    private final static CartesianCoordinate CARTESIAN_CENTER = new CartesianCoordinate(0d,0d,0d);
-    private final static SphericCoordinate SPHERIC_CENTER = new SphericCoordinate(0d,0d,0d);
-    private static final double DELTA = 0.0001d;
-
-    private static final Coordinate[][]  CARTESIAN_SPHERIC_PAIRS = new Coordinate[][]{
-            { CARTESIAN_CENTER, new SphericCoordinate(0d,0d,0d)},
-            { new CartesianCoordinate(-3.594566816, 3.632106035, 1.806459287), new SphericCoordinate(5.42,2.351,1.231)},
-            { new CartesianCoordinate(-1426.596824, 158.4175098, 4149.891417),new SphericCoordinate(4391.113,3.031,0.333)},
-            { new CartesianCoordinate(-1.32655321, 3.412095991,-2.255627968), new SphericCoordinate(4.3,1.941592654,2.123)},
-            { new CartesianCoordinate(0d, 0d, 10d), new SphericCoordinate(10,2 * Math.PI,4 * Math.PI)}
-    };
-
-    @Test
+    /**
+     *
+     */
+    @Override
     public void testGettersReturnCorrectValues() {
-        CartesianCoordinate coordinate = new CartesianCoordinate(1d,2d,3d);
-        assertEquals("getRadius returns wrong value",1d, coordinate.getX(), DELTA);
-        assertEquals("getPhi returns wrong value",2d, coordinate.getY(), DELTA);
-        assertEquals("getTheta returns wrong value",3d, coordinate.getZ(), DELTA);
+        double x = 14d;
+        double y = 542d;
+        double z = -556d;
+        CartesianCoordinate coordinate = new CartesianCoordinate(x,y,z);
+        assertEquals("getX() returns wrong value",x, coordinate.getX(), DELTA);
+        assertEquals("getY() returns wrong value",y, coordinate.getY(), DELTA);
+        assertEquals("getZ() returns wrong value",z, coordinate.getZ(), DELTA);
 
-        coordinate = new CartesianCoordinate(1d,5d,6d);
-        assertEquals("getRadius returns wrong value",1d, coordinate.getX(), DELTA);
-        assertEquals("getPhi returns wrong value",5d % (2 * Math.PI), coordinate.getY(), DELTA);
-        assertEquals("getTheta returns wrong value",6d % (2 * Math.PI), coordinate.getZ(), DELTA);
-    }
-
-    @Test
-    public void testAsSphericalCoordinate(){
-        for(int i = 0; i < CARTESIAN_SPHERIC_PAIRS.length; i++){
-            CartesianCoordinate cartesianCoordinate = (CartesianCoordinate) CARTESIAN_SPHERIC_PAIRS[i][0];
-            SphericCoordinate sphericCoordinate = (SphericCoordinate) CARTESIAN_SPHERIC_PAIRS[i][1];
-            SphericCoordinate cartesianAsSpheric = cartesianCoordinate.asSphericCoordinate();
-            assertEquals(cartesianCoordinate.toString() + " radius", sphericCoordinate.getRadius(), cartesianAsSpheric.getRadius(), DELTA);
-            assertEquals(cartesianCoordinate.toString() + " theta", sphericCoordinate.getTheta(), cartesianAsSpheric.getTheta(), DELTA);
-            assertEquals(cartesianCoordinate.toString() + " phi", sphericCoordinate.getPhi(), cartesianAsSpheric.getPhi(), DELTA);
-        }
+        x = 1d;
+        y = 2d;
+        z = 3d;
+        coordinate = new CartesianCoordinate(x, y,z);
+        assertEquals("getX() returns wrong value", x, coordinate.getX(), DELTA);
+        assertEquals("getY() returns wrong value", y, coordinate.getY(), DELTA);
+        assertEquals("getZ() returns wrong value",z, coordinate.getZ(), DELTA);
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetCartesianDistanceOnNullThrowsException(){
-        CARTESIAN_CENTER.getCartesianDistance(null);
-    }
-
-    @Test
-    public void testGetCartesianDistance(){
-        Coordinate[][] cartesianCoordinatePairs = new Coordinate[][]{
-                { CARTESIAN_CENTER, CARTESIAN_CENTER},
-                { CARTESIAN_SPHERIC_PAIRS[1][0], CARTESIAN_SPHERIC_PAIRS[2][0]},
-                { CARTESIAN_SPHERIC_PAIRS[1][0], CARTESIAN_SPHERIC_PAIRS[3][0]},
-                { CARTESIAN_SPHERIC_PAIRS[2][0], CARTESIAN_SPHERIC_PAIRS[3][0]}
-        };
-
-        double[] expected = new double[]{0d, 4388.109246794005d, 4.657557622059717d, 4392.692466627665d};
-
-        for(int i = 0; i < cartesianCoordinatePairs.length; i++){
-            CartesianCoordinate cartesianCoordinate1 = (CartesianCoordinate) cartesianCoordinatePairs[i][0];
-            CartesianCoordinate cartesianCoordinate2 = (CartesianCoordinate) cartesianCoordinatePairs[i][1];
-            assertEquals(expected[i], cartesianCoordinate1.getCartesianDistance(cartesianCoordinate2), DELTA);
-        }
-    }
-
+    /**
+     *
+     */
     @Test
     public void testAsCartesianCoordinate(){
         Coordinate[] sphericCoordinates = new Coordinate[]{
@@ -87,12 +52,61 @@ public class CartesianCoordinateTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetCentralAngleOnNullThrowsException(){
-        CARTESIAN_CENTER.getCentralAngle(null);
+    /**
+     *
+     */
+    @Override
+    public void testAsSphericCoordinate(){
+        for(int i = 0; i < CARTESIAN_SPHERIC_PAIRS.length; i++){
+            CartesianCoordinate cartesianCoordinate = (CartesianCoordinate) CARTESIAN_SPHERIC_PAIRS[i][0];
+            SphericCoordinate sphericCoordinate = (SphericCoordinate) CARTESIAN_SPHERIC_PAIRS[i][1];
+            SphericCoordinate cartesianAsSpheric = cartesianCoordinate.asSphericCoordinate();
+            assertEquals(cartesianCoordinate.toString() + " radius", sphericCoordinate.getRadius(), cartesianAsSpheric.getRadius(), DELTA);
+            assertEquals(cartesianCoordinate.toString() + " theta", sphericCoordinate.getTheta(), cartesianAsSpheric.getTheta(), DELTA);
+            assertEquals(cartesianCoordinate.toString() + " phi", sphericCoordinate.getPhi(), cartesianAsSpheric.getPhi(), DELTA);
+        }
+
     }
 
-    @Test
+    /**
+     *
+     */
+    @Override
+    public void testGetCartesianDistance(){
+        Coordinate[][] coordinatePairs = buildCoordinatePairs(CoordinateType.CARTESIAN);
+
+        for(int i = 0; i < coordinatePairs.length; i++){
+            CartesianCoordinate cartesianCoordinate1 = (CartesianCoordinate) coordinatePairs[i][0];
+            CartesianCoordinate cartesianCoordinate2 = (CartesianCoordinate) coordinatePairs[i][1];
+            assertEquals(calculateCartesianDistance(cartesianCoordinate1, cartesianCoordinate2)
+                    , cartesianCoordinate1.getCartesianDistance(cartesianCoordinate2)
+                    , DELTA);
+        }
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void testGetCartesianDistanceOnNullThrowsException(){
+        CARTESIAN_CENTER.getCartesianDistance(null);
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void testGetCartesianDistanceOnSameObjectReturnsZero(){
+        for(int i = 0; i < CARTESIAN_SPHERIC_PAIRS.length; i++){
+            CartesianCoordinate cartesianCoordinate = (CartesianCoordinate) CARTESIAN_SPHERIC_PAIRS[i][CoordinateType.CARTESIAN.ordinal()];
+            assertEquals(0d, cartesianCoordinate.getCartesianDistance(cartesianCoordinate), DELTA);
+        }
+    }
+
+    /**
+     *
+     */
+    @Override
     public void testGetCentralAngle(){
         Coordinate[][] sphericCoordinatePairs = new Coordinate[][]{
                 { CARTESIAN_CENTER, CARTESIAN_CENTER},
@@ -109,31 +123,22 @@ public class CartesianCoordinateTest {
             assertEquals(expected[i], cartesianCoordinate1.getCentralAngle(cartesianCoordinate2), DELTA);
         }
     }
-    /**
-     *
-     */
-    @Test
-    public void gettersReturnCorrectValues() {
-        CartesianCoordinate coordinate = new CartesianCoordinate(1d,2d,3d);
-        assertEquals("getX returns wrong value",1d, coordinate.getX(), .001d);
-        assertEquals("getY returns wrong value",2d, coordinate.getY(), .001d);
-        assertEquals("getZ returns wrong value",3d, coordinate.getZ(), .001d);
-    }
 
     /**
      *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void nullOnGetCartesianDistanceCausesException() {
-        CartesianCoordinate coordinate = new CartesianCoordinate(1d,2d,3d);
-        coordinate.getCartesianDistance(null);
+    public void testGetCentralAngleOnNullThrowsException(){
+        CARTESIAN_CENTER.getCentralAngle(null);
     }
+
+
 
     /**
      *
      */
-    @Test
-    public void equalsOnNull(){
+    @Override
+    public void testEqualsOnNull(){
         CartesianCoordinate coordinate = new CartesianCoordinate(2d, 2d, 2d);
         assertFalse(coordinate.equals(null));
     }
@@ -141,8 +146,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void equalsOnSameObject(){
+    @Override
+    public void testEqualsOnSameObject(){
         CartesianCoordinate coordinate = new CartesianCoordinate(2d, 2d, 2d);
         assertTrue(coordinate.equals(coordinate));
     }
@@ -150,8 +155,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void equalsOnDifferentObjectDifferentValues(){
+    @Override
+    public void testEqualsOnDifferentObjectDifferentValues(){
         CartesianCoordinate coordinate1 = new CartesianCoordinate(2d, 2d, 2d);
         CartesianCoordinate coordinate2 = new CartesianCoordinate(1d, 2d, 2d);
         assertFalse(coordinate1.equals(coordinate2));
@@ -160,8 +165,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void equalsOnDifferentObjectSameValues(){
+    @Override
+    public void testEqualsOnDifferentObjectSameValues(){
         CartesianCoordinate coordinate1 = new CartesianCoordinate(2d, 2d, 2d);
         CartesianCoordinate coordinate2 = new CartesianCoordinate(2d, 2d, 2d);
         assertTrue(coordinate1.equals(coordinate2));
@@ -170,8 +175,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void equalsOnDifferentObjectType(){
+    @Override
+    public void testEqualsOnDifferentObjectType(){
         CartesianCoordinate coordinate = new CartesianCoordinate(2d, 2d, 2d);
         String noCoordinate = new String();
         assertFalse(coordinate.equals(noCoordinate));
@@ -180,8 +185,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void compareHashCodeOfEqualCoordinates(){
+    @Override
+    public void testCompareHashCodeOfEqualCoordinates(){
         CartesianCoordinate coordinate1 = new CartesianCoordinate(2d, 2d, 2d);
         CartesianCoordinate coordinate2 = new CartesianCoordinate(2d, 2d, 2d);
         assertEquals(coordinate1.hashCode(), coordinate2.hashCode());
@@ -190,8 +195,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void compareHashCodeOfDifferentCoordinates(){
+    @Override
+    public void testCompareHashCodeOfDifferentCoordinates(){
         for(int i = 0; i < 10000; i++){
             CartesianCoordinate coordinate1 = new CartesianCoordinate((double)i* 2d, 2d, 2d);
             CartesianCoordinate coordinate2 = new CartesianCoordinate(2d, 1d, (double)i* 2d);
@@ -203,8 +208,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void whenHashCodesAreEqualEqualsIsEqual(){
+    @Override
+    public void testWhenHashCodesAreEqualEqualsIsEqual(){
         for(int i = 0; i < 10000; i++){
             CartesianCoordinate coordinate1 = new CartesianCoordinate((double)i* 2d, 2d, 2d);
             CartesianCoordinate coordinate2 = new CartesianCoordinate((double)i* 2d, 1d, 2d);
@@ -215,8 +220,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void isEqualOnNull(){
+    @Override
+    public void testIsEqualOnNull(){
         CartesianCoordinate coordinate = new CartesianCoordinate(2d, 2d, 2d);
         assertFalse(coordinate.isEqual(null));
     }
@@ -224,8 +229,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void isEqualOnSameObject(){
+    @Override
+    public void testIsEqualOnSameObject(){
         CartesianCoordinate coordinate = new CartesianCoordinate(2d, 2d, 2d);
         assertTrue(coordinate.isEqual(coordinate));
     }
@@ -233,8 +238,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void isEqualOnDifferentObjectDifferentValues(){
+    @Override
+    public void testIsEqualOnDifferentObjectDifferentValues(){
         CartesianCoordinate coordinate1 = new CartesianCoordinate(2d, 2d, 2d);
         CartesianCoordinate coordinate2 = new CartesianCoordinate(1d, 2d, 2d);
         assertFalse(coordinate1.isEqual(coordinate2));
@@ -243,8 +248,8 @@ public class CartesianCoordinateTest {
     /**
      *
      */
-    @Test
-    public void isEqualOnDifferentObjectSameValues(){
+    @Override
+    public void testIsEqualOnDifferentObjectSameValues(){
         CartesianCoordinate coordinate1 = new CartesianCoordinate(2d, 2d, 2d);
         CartesianCoordinate coordinate2 = new CartesianCoordinate(2d, 2d, 2d);
         assertTrue(coordinate1.equals(coordinate2));

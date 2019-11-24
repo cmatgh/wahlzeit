@@ -2,17 +2,17 @@ package org.wahlzeit.model;
 
 public class Location{
 
-    private CartesianCoordinate coordinate;
+    private Coordinate coordinate;
 
-    public CartesianCoordinate getCoordinate() {
+    public Coordinate getCoordinate() {
         return coordinate;
     }
 
-    public Location(CartesianCoordinate coordinate){
+    public Location(Coordinate coordinate){
         setCoordinate(coordinate);
     }
 
-    public void setCoordinate(CartesianCoordinate coordinate){
+    public void setCoordinate(Coordinate coordinate){
         if(null == coordinate){
             throw new IllegalArgumentException();
         }

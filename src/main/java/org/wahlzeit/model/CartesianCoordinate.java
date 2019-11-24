@@ -2,20 +2,13 @@ package org.wahlzeit.model;
 
 import java.util.Objects;
 
-public class CartesianCoordinate implements Coordinate{
-
-    private static final CartesianCoordinate CENTER = new CartesianCoordinate(0d, 0d, 0d);
-    private static final double DELTA = 0.0001d;
+public class CartesianCoordinate extends AbstractCoordinate{
 
     private double x;
     private double y;
     private double z;
 
-    public CartesianCoordinate(double x, double y, double z){
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
+    private double norm = Double.NaN;
 
     public double getX(){
         return x;
@@ -29,32 +22,42 @@ public class CartesianCoordinate implements Coordinate{
         return z;
     }
 
+    private void setX(double x){ this.x = x; }
+
+    private void setY(double y){ this.y = y; }
+
+    private void setZ(double z){ this.z = z; }
+
+
+    public CartesianCoordinate(double x, double y, double z){
+        setX(x);
+        setY(y);
+        setZ(z);
+    }
+
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
         return this;
     }
 
     @Override
-    public double getCartesianDistance(Coordinate coordinate) {
-        if(coordinate == null){
-            throw new IllegalArgumentException();
-        }
-        CartesianCoordinate coord = coordinate.asCartesianCoordinate();
+    protected double doGetCartesianDistance(Coordinate coordinate){
+        CartesianCoordinate cartesianCoordinate = coordinate.asCartesianCoordinate();
 
-        return doGetCartesianDistance(this, coord);
+        return calculateCartesianDistance(cartesianCoordinate);
     }
 
-    private double doGetCartesianDistance(CartesianCoordinate c1, CartesianCoordinate c2){
-        double dx = c1.getX() - c2.getX();
-        double dy = c1.getY() - c2.getY();
-        double dz = c1.getZ() - c2.getZ();
+    private double calculateCartesianDistance(CartesianCoordinate coordinate){
+        double dx = this.getX() - coordinate.getX();
+        double dy = this.getY() - coordinate.getY();
+        double dz = this.getZ() - coordinate.getZ();
 
         return Math.sqrt(dx*dx + dy*dy + dz*dz);
     }
 
     @Override
     public SphericCoordinate asSphericCoordinate() {
-        double r = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
+        double r = norm();
         if(r == 0){
             return new SphericCoordinate(0d, 0d, 0d);
         }
@@ -65,54 +68,16 @@ public class CartesianCoordinate implements Coordinate{
         return sphericCoordinate;
     }
 
-    @Override
-    public double getCentralAngle(Coordinate coordinate) {
-        if(coordinate == null){
-            throw new IllegalArgumentException();
-        }
-
-        return doGetCentralAngle(coordinate.asCartesianCoordinate());
-    }
-
-    private double doGetCentralAngle(CartesianCoordinate coordinate){
-      CartesianCoordinate normalized1 = this.normalize();
-      CartesianCoordinate normalized2 = coordinate.normalize();
-      double nom = cross(normalized1, normalized2).norm();
-      double denom = dot(normalized1, normalized2);
-      if(denom == 0){
-          return 0;
-      }
-      return Math.abs(Math.atan(nom/denom));
-    }
-
-    private CartesianCoordinate normalize(){
-        double norm = norm();
-        if(norm == 0){
-            return CENTER;
-        }
-        return new CartesianCoordinate(getX()/norm, getY()/norm, getZ()/norm);
-    }
-
-    private CartesianCoordinate cross(CartesianCoordinate coordinate1, CartesianCoordinate coordinate2){
-        return new CartesianCoordinate(coordinate1.getY() * coordinate2.getZ() - coordinate1.getZ() * coordinate2.getY()
-        ,coordinate1.getZ() * coordinate2.getX() - coordinate1.getX() * coordinate2.getZ()
-        ,coordinate1.getX() * coordinate2.getY() - coordinate1.getY() * coordinate2.getX());
-    }
-
-    private double dot(CartesianCoordinate coord1, CartesianCoordinate coord2){
-        return coord1.getX() * coord2.getX() + coord1.getY() * coord2.getY() +coord1.getZ() * coord2.getZ();
-    }
-
     private double norm(){
-        return Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
+        if(Double.isNaN(norm)){
+            norm = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
+        }
+        return norm;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || !(o instanceof Coordinate)) return false;
-
-        return isEqual((Coordinate) o);
+    protected double doGetCentralAngle(Coordinate coordinate){
+        return asSphericCoordinate().doGetCentralAngle(coordinate);
     }
 
     @Override
@@ -140,5 +105,4 @@ public class CartesianCoordinate implements Coordinate{
     public String toString(){
         return "(" + getX() +", " + getY() + ", " + getZ() + ")";
     }
-
 }
