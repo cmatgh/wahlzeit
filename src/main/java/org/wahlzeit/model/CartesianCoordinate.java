@@ -8,8 +8,6 @@ public class CartesianCoordinate extends AbstractCoordinate{
     private double y;
     private double z;
 
-    private double norm = Double.NaN;
-
     public double getX(){
         return x;
     }
@@ -24,30 +22,45 @@ public class CartesianCoordinate extends AbstractCoordinate{
 
     private void setX(double x){ this.x = x; }
 
-    private void setY(double y){ this.y = y; }
+    private void setY(double y){
+        this.y = y;
+    }
 
-    private void setZ(double z){ this.z = z; }
-
+    private void setZ(double z){
+        this.z = z;
+    }
 
     public CartesianCoordinate(double x, double y, double z){
         setX(x);
         setY(y);
         setZ(z);
+
+        assert this.x == x;
+        assert this.y == y;
+        assert this.z == z;
     }
 
     @Override
-    public CartesianCoordinate asCartesianCoordinate() {
+    public CartesianCoordinate doAsCartesianCoordinate() {
         return this;
     }
 
     @Override
     protected double doGetCartesianDistance(Coordinate coordinate){
-        CartesianCoordinate cartesianCoordinate = coordinate.asCartesianCoordinate();
+        double x = getX();
+        double y = getY();
+        double z = getZ();
 
-        return calculateCartesianDistance(cartesianCoordinate);
+        double distance = basicGetCartesianDistance(coordinate.asCartesianCoordinate());
+
+        assert x == getX();
+        assert y == getY();
+        assert z == getZ();
+
+        return distance;
     }
 
-    private double calculateCartesianDistance(CartesianCoordinate coordinate){
+    private double basicGetCartesianDistance(CartesianCoordinate coordinate){
         double dx = this.getX() - coordinate.getX();
         double dy = this.getY() - coordinate.getY();
         double dz = this.getZ() - coordinate.getZ();
@@ -56,23 +69,29 @@ public class CartesianCoordinate extends AbstractCoordinate{
     }
 
     @Override
-    public SphericCoordinate asSphericCoordinate() {
-        double r = norm();
+    public SphericCoordinate doAsSphericCoordinate() {
+        double x = getX();
+        double y = getY();
+        double z = getZ();
+
+       SphericCoordinate sphericCoordinate = basicToSphericCoordinate();
+
+        assert x == getX();
+        assert y == getY();
+        assert z == getZ();
+
+        return sphericCoordinate;
+    }
+
+    private SphericCoordinate basicToSphericCoordinate(){
+        double r = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
         if(r == 0){
             return new SphericCoordinate(0d, 0d, 0d);
         }
         double theta = Math.atan2(getY(),getX());
         double phi = Math.acos(getZ()/r);
 
-        SphericCoordinate sphericCoordinate = new SphericCoordinate(r,theta, phi);
-        return sphericCoordinate;
-    }
-
-    private double norm(){
-        if(Double.isNaN(norm)){
-            norm = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
-        }
-        return norm;
+        return new SphericCoordinate(r,theta, phi);
     }
 
     @Override
@@ -81,14 +100,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
     }
 
     @Override
-    public boolean isEqual(Coordinate coordinate){
-        if(null == coordinate){
-            return false;
-        }
-        if(this == coordinate){
-            return true;
-        }
-
+    public boolean doIsEqual(Coordinate coordinate){
         CartesianCoordinate coord = coordinate.asCartesianCoordinate();
 
         return Math.abs(this.getX() - coord.getX()) <= DELTA
@@ -105,4 +117,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
     public String toString(){
         return "(" + getX() +", " + getY() + ", " + getZ() + ")";
     }
+
+    @Override
+    protected void assertClassInvariants(){ }
 }
