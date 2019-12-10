@@ -2,10 +2,10 @@ package org.wahlzeit.model;
 
 public interface Coordinate {
 
-    CartesianCoordinate asCartesianCoordinate();
-    double getCartesianDistance(Coordinate coordinate);
-    SphericCoordinate asSphericCoordinate();
-    double getCentralAngle(Coordinate coordinate);
-    boolean isEqual(Coordinate coordinate);
+    CartesianCoordinate asCartesianCoordinate() throws CoordinateException;
+    double getCartesianDistance(Coordinate coordinate) throws CoordinateException;
+    SphericCoordinate asSphericCoordinate() throws CoordinateException;
+    double getCentralAngle(Coordinate coordinate) throws CoordinateException;
+    boolean isEqual(Coordinate coordinate) throws CoordinateException;
 
 }

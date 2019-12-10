@@ -1,89 +1,126 @@
 package org.wahlzeit.model;
 
+import org.wahlzeit.services.LogBuilder;
+
+import java.util.logging.Logger;
+
 abstract class AbstractCoordinate implements Coordinate{
+
     static final double DELTA = 0.0001d;
 
+    protected static final Logger log = Logger.getLogger(LandscapePhotoManager.class.getName());
+
     @Override
-    public CartesianCoordinate asCartesianCoordinate(){
-        assertClassInvariants();
+    public CartesianCoordinate asCartesianCoordinate() throws CoordinateException {
+        try {
+            assertClassInvariants();
 
-        CartesianCoordinate cartesianCoordinate = this.doAsCartesianCoordinate();
+            CartesianCoordinate cartesianCoordinate = this.doAsCartesianCoordinate();
 
-        assert cartesianCoordinate != null;
+            assert cartesianCoordinate != null;
 
-        assertClassInvariants();
-        return cartesianCoordinate;
+            assertClassInvariants();
+            return cartesianCoordinate;
+        }catch (Exception ex){
+            log.warning(LogBuilder.createSystemMessage().
+                    addException(ex.getMessage(), ex).toString());
+            throw new CoordinateException(ex.getMessage());
+        }
     }
 
     protected abstract CartesianCoordinate doAsCartesianCoordinate();
 
     @Override
-    public SphericCoordinate asSphericCoordinate(){
-        assertClassInvariants();
+    public SphericCoordinate asSphericCoordinate() throws CoordinateException {
+        try {
+            assertClassInvariants();
 
-        SphericCoordinate sphericCoordinate = this.doAsSphericCoordinate();
+            SphericCoordinate sphericCoordinate = this.doAsSphericCoordinate();
 
-        assert sphericCoordinate != null;
+            assert sphericCoordinate != null;
 
-        assertClassInvariants();
-        return sphericCoordinate;
+            assertClassInvariants();
+            return sphericCoordinate;
+        }catch (Exception ex){
+            log.warning(LogBuilder.createSystemMessage().
+                    addException(ex.getMessage(), ex).toString());
+            throw new CoordinateException(ex.getMessage());
+        }
     }
 
     protected abstract SphericCoordinate doAsSphericCoordinate();
 
     @Override
-    public double getCartesianDistance(Coordinate coordinate) {
-        assertClassInvariants();
+    public double getCartesianDistance(Coordinate coordinate) throws CoordinateException {
+        try{
+            assertClassInvariants();
 
-        assertNotNull(coordinate);
+            assertNotNull(coordinate);
 
-        double distance = doGetCartesianDistance(coordinate);
+            double distance = doGetCartesianDistance(coordinate);
 
-        assert distance >= 0;
+            assert distance >= 0;
 
-        assertClassInvariants();
+            assertClassInvariants();
 
-        return distance;
+            return distance;
+        }catch (Exception ex){
+            log.warning(LogBuilder.createSystemMessage().
+                    addException(ex.getMessage(), ex).toString());
+            throw new CoordinateException(ex.getMessage());
+        }
     }
 
-    protected abstract double doGetCartesianDistance(Coordinate coordinate);
+    protected abstract double doGetCartesianDistance(Coordinate coordinate) throws CoordinateException;
 
     @Override
-    public double getCentralAngle(Coordinate coordinate) {
-        assertClassInvariants();
+    public double getCentralAngle(Coordinate coordinate) throws CoordinateException {
+        try{
+            assertClassInvariants();
+            assertNotNull(coordinate);
 
-        assertNotNull(coordinate);
+            double angle = doGetCentralAngle(coordinate);
 
-        double angle = doGetCentralAngle(coordinate);
+            assert angle >= 0;
+            assertClassInvariants();
 
-        assert angle >= 0;
+            return angle;
+        }catch (Exception ex){
+            log.warning(LogBuilder.createSystemMessage().
+                    addException(ex.getMessage(), ex).toString());
+            throw new CoordinateException(ex.getMessage());
+        }
 
-        assertClassInvariants();
-
-        return angle;
     }
 
-    protected abstract double doGetCentralAngle(Coordinate coordinate);
+    protected abstract double doGetCentralAngle(Coordinate coordinate) throws CoordinateException;
 
     @Override
-    public boolean isEqual(Coordinate coordinate){
-        assertClassInvariants();
+    public boolean isEqual(Coordinate coordinate) throws CoordinateException {
+        try {
+            assertClassInvariants();
 
-        if(null == coordinate){
-            return false;
+            if (null == coordinate) {
+                return false;
+            }
+            if (this == coordinate) {
+                return true;
+            }
+
+            boolean equal = doIsEqual(coordinate);
+
+            assertClassInvariants();
+
+            return equal;
+        }catch (Exception ex){
+            log.warning(LogBuilder.createSystemMessage().
+                    addException(ex.getMessage(), ex).toString());
+            throw new CoordinateException(ex.getMessage());
         }
-        if(this == coordinate){
-            return true;
-        }
 
-        boolean equal = doIsEqual(coordinate);
-
-        assertClassInvariants();
-
-        return equal;
     }
 
-    protected abstract boolean doIsEqual(Coordinate coordinate);
+    protected abstract boolean doIsEqual(Coordinate coordinate) throws CoordinateException;
 
     @Override
     public boolean equals(Object o) {
@@ -97,7 +134,13 @@ abstract class AbstractCoordinate implements Coordinate{
             return false;
         }
 
-        return isEqual((Coordinate) o);
+        try {
+            return isEqual((Coordinate) o);
+        } catch (CoordinateException ex) {
+            log.warning(LogBuilder.createSystemMessage().
+                    addException(ex.getMessage(), ex).toString());
+            return false;
+        }
     }
 
     private void assertNotNull(Coordinate coordinate){
