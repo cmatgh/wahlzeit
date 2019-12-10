@@ -34,14 +34,14 @@ public class SphericCoordinate extends AbstractCoordinate{
         }
     }
 
-    private void setRadius(double radius){
+    private void setRadius(double radius) {
         if(radius < 0){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Radius of SphericCoordinate cannot be negative");
         }
         this.radius = radius;
     }
 
-    public SphericCoordinate(double radius, double theta, double phi){
+    public SphericCoordinate(double radius, double theta, double phi) {
         setRadius(radius);
         setTheta(theta);
         setPhi(phi);
@@ -50,7 +50,7 @@ public class SphericCoordinate extends AbstractCoordinate{
     }
 
     @Override
-    public CartesianCoordinate doAsCartesianCoordinate() {
+    protected CartesianCoordinate doAsCartesianCoordinate() {
         double radius = getRadius();
         double theta = getTheta();
         double phi = getPhi();
@@ -73,17 +73,17 @@ public class SphericCoordinate extends AbstractCoordinate{
     }
 
     @Override
-    protected double doGetCartesianDistance(Coordinate coordinate){
+    protected double doGetCartesianDistance(Coordinate coordinate) throws CoordinateException {
         return asCartesianCoordinate().doGetCartesianDistance(coordinate);
    }
 
     @Override
-    public SphericCoordinate doAsSphericCoordinate() {
+    protected SphericCoordinate doAsSphericCoordinate() {
         return this;
     }
 
     @Override
-    protected double doGetCentralAngle(Coordinate coordinate){
+    protected double doGetCentralAngle(Coordinate coordinate) throws CoordinateException {
         double radius = this.getRadius();
         double theta = this.getTheta();
         double phi = this.getPhi();
@@ -97,7 +97,7 @@ public class SphericCoordinate extends AbstractCoordinate{
         return angle;
     }
 
-    private double basicGetCentralAngle(Coordinate coordinate){
+    private double basicGetCentralAngle(Coordinate coordinate) throws CoordinateException {
         SphericCoordinate c1 = this;
         SphericCoordinate c2 = coordinate.asSphericCoordinate();
 
@@ -119,7 +119,7 @@ public class SphericCoordinate extends AbstractCoordinate{
     }
 
     @Override
-    public boolean doIsEqual(Coordinate coordinate){
+    protected boolean doIsEqual(Coordinate coordinate) throws CoordinateException {
         SphericCoordinate coord = coordinate.asSphericCoordinate();
 
         return Math.abs(this.getRadius() - coord.getRadius()) <= DELTA

@@ -12,40 +12,43 @@ public abstract class AbstractCoordinateTest {
     };
 
     protected final static CartesianCoordinate CARTESIAN_CENTER = new CartesianCoordinate(0d,0d,0d);
-    protected final static SphericCoordinate SPHERIC_CENTER = new SphericCoordinate(0d,0d,0d);
+    protected static SphericCoordinate SPHERIC_CENTER = new SphericCoordinate(0d, 0d, 0d);
+
+
     protected static final double DELTA = 0.0001d;
-    protected static final Coordinate[][]  CARTESIAN_SPHERIC_PAIRS = new Coordinate[][]{
-            { CARTESIAN_CENTER, SPHERIC_CENTER},
-            { new CartesianCoordinate(-3.594566816, 3.632106035, 1.806459287), new SphericCoordinate(5.42,2.351,1.231)},
-            { new CartesianCoordinate(-1426.596824, 158.4175098, 4149.891417),new SphericCoordinate(4391.113,3.031,0.333)},
-            { new CartesianCoordinate(-1.32655321, 3.412095991,-2.255627968), new SphericCoordinate(4.3,1.941592654,2.123)},
-            { new CartesianCoordinate(0d, 0d, 10d), new SphericCoordinate(10,2 * Math.PI,4 * Math.PI)},
-            { new CartesianCoordinate(13.33653951, 63.28842394,372.425445), new SphericCoordinate(378,133.31,44.15425)}
-    };
+    protected static Coordinate[][]  CARTESIAN_SPHERIC_PAIRS = new Coordinate[][]{
+                   { CARTESIAN_CENTER, SPHERIC_CENTER},
+                   { new CartesianCoordinate(-3.594566816, 3.632106035, 1.806459287), new SphericCoordinate(5.42,2.351,1.231)},
+                   { new CartesianCoordinate(-1426.596824, 158.4175098, 4149.891417),new SphericCoordinate(4391.113,3.031,0.333)},
+                   { new CartesianCoordinate(-1.32655321, 3.412095991,-2.255627968), new SphericCoordinate(4.3,1.941592654,2.123)},
+                   { new CartesianCoordinate(0d, 0d, 10d), new SphericCoordinate(10,2 * Math.PI,4 * Math.PI)},
+                   { new CartesianCoordinate(13.33653951, 63.28842394,372.425445), new SphericCoordinate(378,133.31,44.15425)}
+        };
+
 
     @Test
     public abstract void testGettersReturnCorrectValues();
 
     @Test
-    public abstract void testAsCartesianCoordinate();
+    public abstract void testAsCartesianCoordinate() throws CoordinateException;
 
     @Test
-    public abstract void testAsSphericCoordinate();
+    public abstract void testAsSphericCoordinate() throws CoordinateException;
 
     @Test
-    public abstract void testGetCartesianDistance();
+    public abstract void testGetCartesianDistance() throws CoordinateException;
 
-    @Test(expected = IllegalArgumentException.class)
-    public abstract void testGetCartesianDistanceOnNullThrowsException();
-
-    @Test
-    public abstract void testGetCartesianDistanceOnSameObjectReturnsZero();
+    @Test(expected = CoordinateException.class)
+    public abstract void testGetCartesianDistanceOnNullThrowsException() throws CoordinateException;
 
     @Test
-    public abstract void testGetCentralAngle();
+    public abstract void testGetCartesianDistanceOnSameObjectReturnsZero() throws CoordinateException;
 
-    @Test(expected = IllegalArgumentException.class)
-    public abstract void testGetCentralAngleOnNullThrowsException();
+    @Test
+    public abstract void testGetCentralAngle() throws CoordinateException;
+
+    @Test(expected = CoordinateException.class)
+    public abstract void testGetCentralAngleOnNullThrowsException() throws CoordinateException;
 
     @Test
     public abstract void testEqualsOnNull();
@@ -72,13 +75,13 @@ public abstract class AbstractCoordinateTest {
     public abstract void testWhenHashCodesAreEqualEqualsIsEqual();
 
     @Test
-    public abstract void testIsEqualOnNull();
+    public abstract void testIsEqualOnNull() throws CoordinateException;
 
     @Test
-    public abstract void testIsEqualOnSameObject();
+    public abstract void testIsEqualOnSameObject() throws CoordinateException;
 
     @Test
-    public abstract void testIsEqualOnDifferentObjectDifferentValues();
+    public abstract void testIsEqualOnDifferentObjectDifferentValues() throws CoordinateException;
 
     @Test
     public abstract void testIsEqualOnDifferentObjectSameValues();
@@ -98,7 +101,7 @@ public abstract class AbstractCoordinateTest {
         return coordinatePairs;
     }
 
-    protected double calculateCartesianDistance(Coordinate c1, Coordinate c2){
+    protected double calculateCartesianDistance(Coordinate c1, Coordinate c2) throws CoordinateException {
         CartesianCoordinate c1Cart = c1.asCartesianCoordinate();
         CartesianCoordinate c2Cart = c2.asCartesianCoordinate();
 

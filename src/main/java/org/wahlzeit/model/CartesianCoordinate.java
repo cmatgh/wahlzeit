@@ -1,5 +1,7 @@
 package org.wahlzeit.model;
 
+import org.wahlzeit.services.LogBuilder;
+
 import java.util.Objects;
 
 public class CartesianCoordinate extends AbstractCoordinate{
@@ -41,12 +43,12 @@ public class CartesianCoordinate extends AbstractCoordinate{
     }
 
     @Override
-    public CartesianCoordinate doAsCartesianCoordinate() {
+    protected CartesianCoordinate doAsCartesianCoordinate() {
         return this;
     }
 
     @Override
-    protected double doGetCartesianDistance(Coordinate coordinate){
+    protected double doGetCartesianDistance(Coordinate coordinate) throws CoordinateException {
         double x = getX();
         double y = getY();
         double z = getZ();
@@ -69,21 +71,22 @@ public class CartesianCoordinate extends AbstractCoordinate{
     }
 
     @Override
-    public SphericCoordinate doAsSphericCoordinate() {
-        double x = getX();
-        double y = getY();
-        double z = getZ();
+    protected SphericCoordinate doAsSphericCoordinate() {
 
-       SphericCoordinate sphericCoordinate = basicToSphericCoordinate();
+            double x = getX();
+            double y = getY();
+            double z = getZ();
 
-        assert x == getX();
-        assert y == getY();
-        assert z == getZ();
+            SphericCoordinate sphericCoordinate = basicToSphericCoordinate();
 
-        return sphericCoordinate;
+            assert x == getX();
+            assert y == getY();
+            assert z == getZ();
+
+            return sphericCoordinate;
     }
 
-    private SphericCoordinate basicToSphericCoordinate(){
+    private SphericCoordinate basicToSphericCoordinate() {
         double r = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
         if(r == 0){
             return new SphericCoordinate(0d, 0d, 0d);
@@ -95,12 +98,12 @@ public class CartesianCoordinate extends AbstractCoordinate{
     }
 
     @Override
-    protected double doGetCentralAngle(Coordinate coordinate){
+    protected double doGetCentralAngle(Coordinate coordinate) throws CoordinateException {
         return asSphericCoordinate().doGetCentralAngle(coordinate);
     }
 
     @Override
-    public boolean doIsEqual(Coordinate coordinate){
+    protected boolean doIsEqual(Coordinate coordinate) throws CoordinateException {
         CartesianCoordinate coord = coordinate.asCartesianCoordinate();
 
         return Math.abs(this.getX() - coord.getX()) <= DELTA
