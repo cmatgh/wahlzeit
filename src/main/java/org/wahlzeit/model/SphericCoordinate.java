@@ -1,10 +1,14 @@
 package org.wahlzeit.model;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class SphericCoordinate extends AbstractCoordinate{
 
     private static final double TWO_PI = 2 * Math.PI;
+
+    private final static Map<Integer, SphericCoordinate> cache = new HashMap<>();
 
     private double radius;
     private double theta;
@@ -20,37 +24,50 @@ public class SphericCoordinate extends AbstractCoordinate{
         return phi;
     }
 
-    private void setTheta(double theta){
-        this.theta = theta %  Math.PI;
-        if(this.theta < 0){
-            this.theta += Math.PI;
-        }
-    }
-
-    private void setPhi(double phi){
-        this.phi = phi % TWO_PI;
-        if(this.phi < 0){
-            this.phi +=  TWO_PI;
-        }
-    }
-
-    private void setRadius(double radius) {
+    public static SphericCoordinate valueOf(double radius, double theta, double phi) throws CoordinateException {
         if(radius < 0){
-            throw new IllegalArgumentException("Radius of SphericCoordinate cannot be negative");
+            throw new CoordinateException("Radius of SphericCoordinate cannot be negative");
         }
-        this.radius = radius;
+
+        SphericCoordinate coordinate = doValueOf(radius, theta, phi);
+
+        assert coordinate != null;
+
+        return coordinate;
     }
 
-    public SphericCoordinate(double radius, double theta, double phi) {
-        setRadius(radius);
-        setTheta(theta);
-        setPhi(phi);
+    private static SphericCoordinate doValueOf(double radius, double theta, double phi) {
+        double thetaNormalized = normalizeAngle(theta, Math.PI);
+        double phiNormalized = normalizeAngle(phi, TWO_PI);
+
+        return putToCacheIfAbsentAndReturn(radius, thetaNormalized, phiNormalized);
+    }
+
+    private static SphericCoordinate putToCacheIfAbsentAndReturn(double radius, double theta, double phi){
+        int hash = Objects.hash(radius, theta, phi);
+        if(!cache.containsKey(hash)){
+            synchronized (SphericCoordinate.class){
+                if(!cache.containsKey(hash)) {
+                    SphericCoordinate coordinate = new SphericCoordinate(radius, theta, phi);
+                    cache.put(coordinate.hashCode(), coordinate);
+                }
+            }
+
+        }
+
+        return cache.get(hash);
+    }
+
+    private SphericCoordinate(double radius, double theta, double phi) {
+        this.radius = radius;
+        this.theta = theta;
+        this.phi = phi;
 
         assertClassInvariants();
     }
 
     @Override
-    protected CartesianCoordinate doAsCartesianCoordinate() {
+    protected CartesianCoordinate doAsCartesianCoordinate() throws CoordinateException {
         double radius = getRadius();
         double theta = getTheta();
         double phi = getPhi();
@@ -64,12 +81,12 @@ public class SphericCoordinate extends AbstractCoordinate{
         return cartesianCoordinate;
     }
 
-    private CartesianCoordinate basicAsCartesianCoordinate(){
+    private CartesianCoordinate basicAsCartesianCoordinate() throws CoordinateException {
         double x = getRadius() * Math.sin(getPhi()) * Math.cos(getTheta());
         double y = getRadius() * Math.sin(getPhi()) * Math.sin(getTheta());
         double z = getRadius() * Math.cos(getPhi());
 
-        return new CartesianCoordinate(x, y, z);
+        return CartesianCoordinate.valueOf(x, y, z);
     }
 
     @Override
@@ -122,9 +139,7 @@ public class SphericCoordinate extends AbstractCoordinate{
     protected boolean doIsEqual(Coordinate coordinate) throws CoordinateException {
         SphericCoordinate coord = coordinate.asSphericCoordinate();
 
-        return Math.abs(this.getRadius() - coord.getRadius()) <= DELTA
-                && Math.abs(this.getPhi() - coord.getPhi()) <= DELTA
-                && Math.abs(this.getTheta() - coord.getTheta()) <= DELTA;
+        return coord == this;
     }
 
     @Override
@@ -142,6 +157,14 @@ public class SphericCoordinate extends AbstractCoordinate{
         assert getRadius() >= 0;
         assert getTheta() >= 0 && getTheta() < Math.PI;
         assert getPhi() >= 0 && getPhi() < TWO_PI;
+    }
+
+    private static double normalizeAngle(double angle, double normalizationFactor){
+        double normalizedAngle = angle % normalizationFactor;
+        if(normalizedAngle < 0){
+            normalizedAngle +=  normalizationFactor;
+        }
+        return normalizedAngle;
     }
 
 }

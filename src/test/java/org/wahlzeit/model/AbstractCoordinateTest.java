@@ -1,5 +1,6 @@
 package org.wahlzeit.model;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -11,23 +12,37 @@ public abstract class AbstractCoordinateTest {
         SPHERIC
     };
 
-    protected final static CartesianCoordinate CARTESIAN_CENTER = new CartesianCoordinate(0d,0d,0d);
-    protected static SphericCoordinate SPHERIC_CENTER = new SphericCoordinate(0d, 0d, 0d);
+    protected CartesianCoordinate CARTESIAN_CENTER;
+    protected SphericCoordinate SPHERIC_CENTER;
 
 
-    protected static final double DELTA = 0.0001d;
-    protected static Coordinate[][]  CARTESIAN_SPHERIC_PAIRS = new Coordinate[][]{
-                   { CARTESIAN_CENTER, SPHERIC_CENTER},
-                   { new CartesianCoordinate(-3.594566816, 3.632106035, 1.806459287), new SphericCoordinate(5.42,2.351,1.231)},
-                   { new CartesianCoordinate(-1426.596824, 158.4175098, 4149.891417),new SphericCoordinate(4391.113,3.031,0.333)},
-                   { new CartesianCoordinate(-1.32655321, 3.412095991,-2.255627968), new SphericCoordinate(4.3,1.941592654,2.123)},
-                   { new CartesianCoordinate(0d, 0d, 10d), new SphericCoordinate(10,2 * Math.PI,4 * Math.PI)},
-                   { new CartesianCoordinate(13.33653951, 63.28842394,372.425445), new SphericCoordinate(378,133.31,44.15425)}
+    protected final double DELTA = 0.0001d;
+    protected Coordinate[][]  CARTESIAN_SPHERIC_PAIRS;
+
+    @Before
+    public void setUp() throws CoordinateException {
+        CARTESIAN_CENTER = CartesianCoordinate.valueOf(0d,0d,0d);
+
+        SPHERIC_CENTER = SphericCoordinate.valueOf(0d, 0d, 0d);
+
+        CARTESIAN_SPHERIC_PAIRS = new Coordinate[][]{
+        { CARTESIAN_CENTER, SPHERIC_CENTER},
+        { CartesianCoordinate.valueOf(-3.594566816, 3.632106035, 1.806459287), SphericCoordinate.valueOf(5.42,2.351,1.231)},
+        { CartesianCoordinate.valueOf(-1426.596824, 158.4175098, 4149.891417),SphericCoordinate.valueOf(4391.113,3.031,0.333)},
+        { CartesianCoordinate.valueOf(-1.32655321, 3.412095991,-2.255627968), SphericCoordinate.valueOf(4.3,1.941592654,2.123)},
+        { CartesianCoordinate.valueOf(0d, 0d, 10d), SphericCoordinate.valueOf(10,2 * Math.PI,4 * Math.PI)},
+        { CartesianCoordinate.valueOf(13.33653951, 63.28842394,372.425445), SphericCoordinate.valueOf(378,133.31,44.15425)}
         };
-
+    }
 
     @Test
-    public abstract void testGettersReturnCorrectValues();
+    public abstract void testValueOfReturnsCoordinate() throws CoordinateException;
+
+    @Test
+    public abstract void testValueOfOnSameValuesReturnSameObject() throws CoordinateException;
+
+    @Test
+    public abstract void testGettersReturnCorrectValues() throws CoordinateException;
 
     @Test
     public abstract void testAsCartesianCoordinate() throws CoordinateException;
@@ -51,28 +66,28 @@ public abstract class AbstractCoordinateTest {
     public abstract void testGetCentralAngleOnNullThrowsException() throws CoordinateException;
 
     @Test
-    public abstract void testEqualsOnNull();
+    public abstract void testEqualsOnNull() throws CoordinateException;
 
     @Test
-    public abstract void testEqualsOnSameObject();
+    public abstract void testEqualsOnSameObject() throws CoordinateException;
 
     @Test
-    public abstract void testEqualsOnDifferentObjectDifferentValues();
+    public abstract void testEqualsOnDifferentObjectDifferentValues() throws CoordinateException;
 
     @Test
-    public abstract void testEqualsOnDifferentObjectSameValues();
+    public abstract void testEqualsOnDifferentObjectSameValues() throws CoordinateException;
 
     @Test
-    public abstract void testEqualsOnDifferentObjectType();
+    public abstract void testEqualsOnDifferentObjectType() throws CoordinateException;
 
     @Test
-    public abstract void testCompareHashCodeOfEqualCoordinates();
+    public abstract void testCompareHashCodeOfEqualCoordinates() throws CoordinateException;
 
     @Test
-    public abstract void testCompareHashCodeOfDifferentCoordinates();
+    public abstract void testCompareHashCodeOfDifferentCoordinates() throws CoordinateException;
 
     @Test
-    public abstract void testWhenHashCodesAreEqualEqualsIsEqual();
+    public abstract void testWhenHashCodesAreEqualEqualsIsEqual() throws CoordinateException;
 
     @Test
     public abstract void testIsEqualOnNull() throws CoordinateException;
@@ -84,7 +99,7 @@ public abstract class AbstractCoordinateTest {
     public abstract void testIsEqualOnDifferentObjectDifferentValues() throws CoordinateException;
 
     @Test
-    public abstract void testIsEqualOnDifferentObjectSameValues();
+    public abstract void testIsEqualOnDifferentObjectSameValues() throws CoordinateException;
 
 
     protected Coordinate[][] buildCoordinatePairs(CoordinateType type){

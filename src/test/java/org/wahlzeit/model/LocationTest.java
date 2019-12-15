@@ -10,8 +10,8 @@ public class LocationTest {
     CartesianCoordinate coordinate = null;
 
     @Before
-    public void setup() throws Exception {
-        coordinate = new CartesianCoordinate(1d,1d,1d);
+    public void setup() throws CoordinateException {
+        coordinate = CartesianCoordinate.valueOf(1d,1d,1d);
     }
 
     /**

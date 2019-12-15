@@ -7,24 +7,38 @@ import static org.junit.Assert.assertFalse;
 
 public class SphericCoordinateTest extends AbstractCoordinateTest{
 
+    @Override
+    public void testValueOfReturnsCoordinate() throws CoordinateException {
+        SphericCoordinate coordinate = SphericCoordinate.valueOf(2d, 2d, 2d);
+        assertTrue(coordinate != null);
+    }
+
+    @Override
+    public void testValueOfOnSameValuesReturnSameObject() throws CoordinateException {
+        SphericCoordinate coordinate1 = SphericCoordinate.valueOf(2d, 2d, 2d);
+        SphericCoordinate coordinate2 = SphericCoordinate.valueOf(2d, 2d, 2d);
+
+        assertTrue(coordinate1 == coordinate2);
+    }
+
     /**
      *
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testNegativeRadiusCausesException() {
-        new SphericCoordinate(-2d, 0d, 0d);
+    @Test(expected = CoordinateException.class)
+    public void testNegativeRadiusCausesException() throws CoordinateException {
+        SphericCoordinate.valueOf(-2d, 0d, 0d);
     }
 
     /**
      *
      */
     @Override
-    public void testGettersReturnCorrectValues() {
+    public void testGettersReturnCorrectValues() throws CoordinateException {
 
         double r  = 1d;
         double theta = 3d;
         double phi = 2d;
-        SphericCoordinate coordinate = new SphericCoordinate(r,theta, phi);
+        SphericCoordinate coordinate = SphericCoordinate.valueOf(r,theta, phi);
         assertEquals("getRadius returns wrong value",r, coordinate.getRadius(), DELTA);
         assertEquals("getTheta returns wrong value",theta % Math.PI, coordinate.getTheta(), DELTA);
         assertEquals("getPhi returns wrong value",phi %  (2 *Math.PI), coordinate.getPhi(), DELTA);
@@ -32,7 +46,7 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
         r = 1d;
         theta = 6d;
         phi = 5d;
-        coordinate = new SphericCoordinate(r,theta,phi);
+        coordinate = SphericCoordinate.valueOf(r,theta,phi);
         assertEquals("getRadius returns wrong value",r, coordinate.getRadius(), DELTA);
         assertEquals("getTheta returns wrong value",theta % Math.PI, coordinate.getTheta(), DELTA);
         assertEquals("getPhi returns wrong value",phi % (2 *Math.PI), coordinate.getPhi(), DELTA);
@@ -40,7 +54,7 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
         r = 1d;
         theta = -1d;
         phi = -2d;
-        coordinate = new SphericCoordinate(r,theta,phi);
+        coordinate = SphericCoordinate.valueOf(r,theta,phi);
         assertEquals("getRadius returns wrong value",r, coordinate.getRadius(), DELTA);
         assertEquals("getTheta returns wrong value",theta + Math.PI, coordinate.getTheta(), DELTA);
         assertEquals("getPhi returns wrong value",phi + (2d * Math.PI), coordinate.getPhi(), DELTA);
@@ -151,8 +165,8 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testEqualsOnNull() {
-        SphericCoordinate coordinate = new SphericCoordinate(2d, 2d, 2d);
+    public void testEqualsOnNull() throws CoordinateException {
+        SphericCoordinate coordinate = SphericCoordinate.valueOf(2d, 2d, 2d);
         assertFalse(coordinate.equals(null));
     }
 
@@ -160,8 +174,8 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testEqualsOnSameObject() {
-        SphericCoordinate coordinate = new SphericCoordinate(2d, 2d, 2d);
+    public void testEqualsOnSameObject() throws CoordinateException {
+        SphericCoordinate coordinate = SphericCoordinate.valueOf(2d, 2d, 2d);
         assertTrue(coordinate.equals(coordinate));
     }
 
@@ -169,9 +183,9 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testEqualsOnDifferentObjectDifferentValues() {
-        SphericCoordinate coordinate1 = new SphericCoordinate(2d, 2d, 2d);
-        SphericCoordinate coordinate2 = new SphericCoordinate(1d, 2d, 2d);
+    public void testEqualsOnDifferentObjectDifferentValues() throws CoordinateException {
+        SphericCoordinate coordinate1 = SphericCoordinate.valueOf(2d, 2d, 2d);
+        SphericCoordinate coordinate2 = SphericCoordinate.valueOf(1d, 2d, 2d);
         assertFalse(coordinate1.equals(coordinate2));
     }
 
@@ -179,9 +193,9 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testEqualsOnDifferentObjectSameValues() {
-        SphericCoordinate coordinate1 = new SphericCoordinate(2d, 2d, 2d);
-        SphericCoordinate coordinate2 = new SphericCoordinate(2d, 2d, 2d);
+    public void testEqualsOnDifferentObjectSameValues() throws CoordinateException {
+        SphericCoordinate coordinate1 = SphericCoordinate.valueOf(2d, 2d, 2d);
+        SphericCoordinate coordinate2 = SphericCoordinate.valueOf(2d, 2d, 2d);
         assertTrue(coordinate1.equals(coordinate2));
     }
 
@@ -189,8 +203,8 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testEqualsOnDifferentObjectType() {
-        SphericCoordinate coordinate = new SphericCoordinate(2d, 2d, 2d);
+    public void testEqualsOnDifferentObjectType() throws CoordinateException {
+        SphericCoordinate coordinate = SphericCoordinate.valueOf(2d, 2d, 2d);
         String noCoordinate = new String();
         assertFalse(coordinate.equals(noCoordinate));
     }
@@ -199,9 +213,9 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testCompareHashCodeOfEqualCoordinates() {
-        SphericCoordinate coordinate1 = new SphericCoordinate(2d, 2d, 2d);
-        SphericCoordinate coordinate2 = new SphericCoordinate(2d, 2d, 2d);
+    public void testCompareHashCodeOfEqualCoordinates() throws CoordinateException {
+        SphericCoordinate coordinate1 = SphericCoordinate.valueOf(2d, 2d, 2d);
+        SphericCoordinate coordinate2 = SphericCoordinate.valueOf(2d, 2d, 2d);
         assertEquals(coordinate1.hashCode(), coordinate2.hashCode());
     }
 
@@ -209,10 +223,10 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testCompareHashCodeOfDifferentCoordinates() {
+    public void testCompareHashCodeOfDifferentCoordinates() throws CoordinateException {
         for(int i = 0; i < 10000; i++){
-            SphericCoordinate coordinate1 = new SphericCoordinate((double)i* 2d, 2d, 2d);
-            SphericCoordinate coordinate2 = new SphericCoordinate(2d, 1d, (double)i* 2d);
+            SphericCoordinate coordinate1 = SphericCoordinate.valueOf((double)i* 2d, 2d, 2d);
+            SphericCoordinate coordinate2 = SphericCoordinate.valueOf(2d, 1d, (double)i* 2d);
             assertNotEquals(coordinate1.hashCode(), coordinate2.hashCode());
         }
     }
@@ -222,10 +236,10 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testWhenHashCodesAreEqualEqualsIsEqual() {
+    public void testWhenHashCodesAreEqualEqualsIsEqual() throws CoordinateException {
         for(int i = 0; i < 10000; i++){
-            SphericCoordinate coordinate1 = new SphericCoordinate((double)i* 2d, 2d, 2d);
-            SphericCoordinate coordinate2 = new SphericCoordinate((double)i* 2d, 1d, 2d);
+            SphericCoordinate coordinate1 = SphericCoordinate.valueOf((double)i* 2d, 2d, 2d);
+            SphericCoordinate coordinate2 = SphericCoordinate.valueOf((double)i* 2d, 1d, 2d);
             assertEquals(coordinate1.equals(coordinate2), coordinate1.hashCode() == coordinate2.hashCode());
         }
     }
@@ -235,7 +249,7 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      */
     @Override
     public void testIsEqualOnNull() throws CoordinateException {
-        SphericCoordinate coordinate = new SphericCoordinate(2d, 2d, 2d);
+        SphericCoordinate coordinate = SphericCoordinate.valueOf(2d, 2d, 2d);
         assertFalse(coordinate.isEqual(null));
     }
 
@@ -244,7 +258,7 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      */
     @Override
     public void testIsEqualOnSameObject() throws CoordinateException {
-        SphericCoordinate coordinate = new SphericCoordinate(2d, 2d, 2d);
+        SphericCoordinate coordinate = SphericCoordinate.valueOf(2d, 2d, 2d);
         assertTrue(coordinate.isEqual(coordinate));
     }
 
@@ -253,8 +267,8 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      */
     @Override
     public void testIsEqualOnDifferentObjectDifferentValues() throws CoordinateException {
-        SphericCoordinate coordinate1 = new SphericCoordinate(2d, 2d, 2d);
-        SphericCoordinate coordinate2 = new SphericCoordinate(1d, 2d, 2d);
+        SphericCoordinate coordinate1 = SphericCoordinate.valueOf(2d, 2d, 2d);
+        SphericCoordinate coordinate2 = SphericCoordinate.valueOf(1d, 2d, 2d);
         assertFalse(coordinate1.isEqual(coordinate2));
     }
 
@@ -262,9 +276,9 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testIsEqualOnDifferentObjectSameValues() {
-        SphericCoordinate coordinate1 = new SphericCoordinate(2d, 2d, 2d);
-        SphericCoordinate coordinate2 = new SphericCoordinate(2d, 2d, 2d);
+    public void testIsEqualOnDifferentObjectSameValues() throws CoordinateException {
+        SphericCoordinate coordinate1 = SphericCoordinate.valueOf(2d, 2d, 2d);
+        SphericCoordinate coordinate2 = SphericCoordinate.valueOf(2d, 2d, 2d);
         assertTrue(coordinate1.equals(coordinate2));
     }
 

@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 abstract class AbstractCoordinate implements Coordinate{
 
-    static final double DELTA = 0.0001d;
+    protected static final double DELTA = 0.0001d;
 
     protected static final Logger log = Logger.getLogger(LandscapePhotoManager.class.getName());
 
@@ -28,7 +28,7 @@ abstract class AbstractCoordinate implements Coordinate{
         }
     }
 
-    protected abstract CartesianCoordinate doAsCartesianCoordinate();
+    protected abstract CartesianCoordinate doAsCartesianCoordinate() throws CoordinateException;
 
     @Override
     public SphericCoordinate asSphericCoordinate() throws CoordinateException {
@@ -48,7 +48,7 @@ abstract class AbstractCoordinate implements Coordinate{
         }
     }
 
-    protected abstract SphericCoordinate doAsSphericCoordinate();
+    protected abstract SphericCoordinate doAsSphericCoordinate() throws CoordinateException;
 
     @Override
     public double getCartesianDistance(Coordinate coordinate) throws CoordinateException {
@@ -124,14 +124,11 @@ abstract class AbstractCoordinate implements Coordinate{
 
     @Override
     public boolean equals(Object o) {
-        if(null == o){
+        if(!(o instanceof Coordinate)){
             return false;
         }
         if (this == o){
             return true;
-        }
-        if (!(o instanceof Coordinate)){
-            return false;
         }
 
         try {

@@ -9,15 +9,29 @@ import static org.junit.Assert.*;
  */
 public class CartesianCoordinateTest extends AbstractCoordinateTest{
 
+    @Override
+    public void testValueOfReturnsCoordinate() throws CoordinateException {
+        CartesianCoordinate coordinate = CartesianCoordinate.valueOf(2d, 2d, 2d);
+        assertTrue(coordinate != null);
+    }
+
+    @Override
+    public void testValueOfOnSameValuesReturnSameObject() throws CoordinateException {
+        CartesianCoordinate coordinate1 = CartesianCoordinate.valueOf(2d, 2d, 2d);
+        CartesianCoordinate coordinate2 = CartesianCoordinate.valueOf(2d, 2d, 2d);
+
+        assertTrue(coordinate1 == coordinate2);
+    }
+
     /**
      *
      */
     @Override
-    public void testGettersReturnCorrectValues() {
+    public void testGettersReturnCorrectValues() throws CoordinateException {
         double x = 14d;
         double y = 542d;
         double z = -556d;
-        CartesianCoordinate coordinate = new CartesianCoordinate(x,y,z);
+        CartesianCoordinate coordinate = CartesianCoordinate.valueOf(x,y,z);
         assertEquals("getX() returns wrong value",x, coordinate.getX(), DELTA);
         assertEquals("getY() returns wrong value",y, coordinate.getY(), DELTA);
         assertEquals("getZ() returns wrong value",z, coordinate.getZ(), DELTA);
@@ -25,7 +39,7 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
         x = 1d;
         y = 2d;
         z = 3d;
-        coordinate = new CartesianCoordinate(x, y,z);
+        coordinate = CartesianCoordinate.valueOf(x, y,z);
         assertEquals("getX() returns wrong value", x, coordinate.getX(), DELTA);
         assertEquals("getY() returns wrong value", y, coordinate.getY(), DELTA);
         assertEquals("getZ() returns wrong value",z, coordinate.getZ(), DELTA);
@@ -58,8 +72,8 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
     @Override
     public void testAsSphericCoordinate() throws CoordinateException {
         for(int i = 0; i < CARTESIAN_SPHERIC_PAIRS.length; i++){
-            CartesianCoordinate cartesianCoordinate = (CartesianCoordinate) CARTESIAN_SPHERIC_PAIRS[i][0];
-            SphericCoordinate sphericCoordinate = (SphericCoordinate) CARTESIAN_SPHERIC_PAIRS[i][1];
+            CartesianCoordinate cartesianCoordinate = (CartesianCoordinate) CARTESIAN_SPHERIC_PAIRS[i][CoordinateType.CARTESIAN.ordinal()];
+            SphericCoordinate sphericCoordinate = (SphericCoordinate) CARTESIAN_SPHERIC_PAIRS[i][CoordinateType.SPHERIC.ordinal()];
             SphericCoordinate cartesianAsSpheric = cartesianCoordinate.asSphericCoordinate();
             assertEquals(cartesianCoordinate.toString() + " radius", sphericCoordinate.getRadius(), cartesianAsSpheric.getRadius(), DELTA);
             assertEquals(cartesianCoordinate.toString() + " theta", sphericCoordinate.getTheta(), cartesianAsSpheric.getTheta(), DELTA);
@@ -138,8 +152,8 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testEqualsOnNull(){
-        CartesianCoordinate coordinate = new CartesianCoordinate(2d, 2d, 2d);
+    public void testEqualsOnNull() throws CoordinateException {
+        CartesianCoordinate coordinate = CartesianCoordinate.valueOf(2d, 2d, 2d);
         assertFalse(coordinate.equals(null));
     }
 
@@ -147,8 +161,8 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testEqualsOnSameObject(){
-        CartesianCoordinate coordinate = new CartesianCoordinate(2d, 2d, 2d);
+    public void testEqualsOnSameObject() throws CoordinateException {
+        CartesianCoordinate coordinate = CartesianCoordinate.valueOf(2d, 2d, 2d);
         assertTrue(coordinate.equals(coordinate));
     }
 
@@ -156,9 +170,9 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testEqualsOnDifferentObjectDifferentValues(){
-        CartesianCoordinate coordinate1 = new CartesianCoordinate(2d, 2d, 2d);
-        CartesianCoordinate coordinate2 = new CartesianCoordinate(1d, 2d, 2d);
+    public void testEqualsOnDifferentObjectDifferentValues() throws CoordinateException {
+        CartesianCoordinate coordinate1 = CartesianCoordinate.valueOf(2d, 2d, 2d);
+        CartesianCoordinate coordinate2 = CartesianCoordinate.valueOf(1d, 2d, 2d);
         assertFalse(coordinate1.equals(coordinate2));
     }
 
@@ -166,9 +180,9 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testEqualsOnDifferentObjectSameValues(){
-        CartesianCoordinate coordinate1 = new CartesianCoordinate(2d, 2d, 2d);
-        CartesianCoordinate coordinate2 = new CartesianCoordinate(2d, 2d, 2d);
+    public void testEqualsOnDifferentObjectSameValues() throws CoordinateException {
+        CartesianCoordinate coordinate1 = CartesianCoordinate.valueOf(2d, 2d, 2d);
+        CartesianCoordinate coordinate2 = CartesianCoordinate.valueOf(2d, 2d, 2d);
         assertTrue(coordinate1.equals(coordinate2));
     }
 
@@ -176,8 +190,8 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testEqualsOnDifferentObjectType(){
-        CartesianCoordinate coordinate = new CartesianCoordinate(2d, 2d, 2d);
+    public void testEqualsOnDifferentObjectType() throws CoordinateException {
+        CartesianCoordinate coordinate = CartesianCoordinate.valueOf(2d, 2d, 2d);
         String noCoordinate = new String();
         assertFalse(coordinate.equals(noCoordinate));
     }
@@ -186,9 +200,9 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testCompareHashCodeOfEqualCoordinates(){
-        CartesianCoordinate coordinate1 = new CartesianCoordinate(2d, 2d, 2d);
-        CartesianCoordinate coordinate2 = new CartesianCoordinate(2d, 2d, 2d);
+    public void testCompareHashCodeOfEqualCoordinates() throws CoordinateException {
+        CartesianCoordinate coordinate1 = CartesianCoordinate.valueOf(2d, 2d, 2d);
+        CartesianCoordinate coordinate2 = CartesianCoordinate.valueOf(2d, 2d, 2d);
         assertEquals(coordinate1.hashCode(), coordinate2.hashCode());
     }
 
@@ -196,10 +210,10 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testCompareHashCodeOfDifferentCoordinates(){
+    public void testCompareHashCodeOfDifferentCoordinates() throws CoordinateException {
         for(int i = 0; i < 10000; i++){
-            CartesianCoordinate coordinate1 = new CartesianCoordinate((double)i* 2d, 2d, 2d);
-            CartesianCoordinate coordinate2 = new CartesianCoordinate(2d, 1d, (double)i* 2d);
+            CartesianCoordinate coordinate1 = CartesianCoordinate.valueOf((double)i* 2d, 2d, 2d);
+            CartesianCoordinate coordinate2 = CartesianCoordinate.valueOf(2d, 1d, (double)i* 2d);
             assertNotEquals(coordinate1.hashCode(), coordinate2.hashCode());
         }
     }
@@ -209,10 +223,10 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testWhenHashCodesAreEqualEqualsIsEqual(){
+    public void testWhenHashCodesAreEqualEqualsIsEqual() throws CoordinateException {
         for(int i = 0; i < 10000; i++){
-            CartesianCoordinate coordinate1 = new CartesianCoordinate((double)i* 2d, 2d, 2d);
-            CartesianCoordinate coordinate2 = new CartesianCoordinate((double)i* 2d, 1d, 2d);
+            CartesianCoordinate coordinate1 = CartesianCoordinate.valueOf((double)i* 2d, 2d, 2d);
+            CartesianCoordinate coordinate2 = CartesianCoordinate.valueOf((double)i* 2d, 1d, 2d);
             assertEquals(coordinate1.equals(coordinate2), coordinate1.hashCode() == coordinate2.hashCode());
         }
     }
@@ -222,7 +236,7 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      */
     @Override
     public void testIsEqualOnNull() throws CoordinateException {
-        CartesianCoordinate coordinate = new CartesianCoordinate(2d, 2d, 2d);
+        CartesianCoordinate coordinate = CartesianCoordinate.valueOf(2d, 2d, 2d);
         assertFalse(coordinate.isEqual(null));
     }
 
@@ -231,7 +245,7 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      */
     @Override
     public void testIsEqualOnSameObject() throws CoordinateException {
-        CartesianCoordinate coordinate = new CartesianCoordinate(2d, 2d, 2d);
+        CartesianCoordinate coordinate = CartesianCoordinate.valueOf(2d, 2d, 2d);
         assertTrue(coordinate.isEqual(coordinate));
     }
 
@@ -240,8 +254,8 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      */
     @Override
     public void testIsEqualOnDifferentObjectDifferentValues() throws CoordinateException {
-        CartesianCoordinate coordinate1 = new CartesianCoordinate(2d, 2d, 2d);
-        CartesianCoordinate coordinate2 = new CartesianCoordinate(1d, 2d, 2d);
+        CartesianCoordinate coordinate1 = CartesianCoordinate.valueOf(2d, 2d, 2d);
+        CartesianCoordinate coordinate2 = CartesianCoordinate.valueOf(1d, 2d, 2d);
         assertFalse(coordinate1.isEqual(coordinate2));
     }
 
@@ -249,9 +263,9 @@ public class CartesianCoordinateTest extends AbstractCoordinateTest{
      *
      */
     @Override
-    public void testIsEqualOnDifferentObjectSameValues(){
-        CartesianCoordinate coordinate1 = new CartesianCoordinate(2d, 2d, 2d);
-        CartesianCoordinate coordinate2 = new CartesianCoordinate(2d, 2d, 2d);
+    public void testIsEqualOnDifferentObjectSameValues() throws CoordinateException {
+        CartesianCoordinate coordinate1 = CartesianCoordinate.valueOf(2d, 2d, 2d);
+        CartesianCoordinate coordinate2 = CartesianCoordinate.valueOf(2d, 2d, 2d);
         assertTrue(coordinate1.equals(coordinate2));
     }
 
