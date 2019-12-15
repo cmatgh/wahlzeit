@@ -1,10 +1,14 @@
 package org.wahlzeit.model;
 
-import org.wahlzeit.services.LogBuilder;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class CartesianCoordinate extends AbstractCoordinate{
+
+    private final static Map<Integer, CartesianCoordinate> cache = new HashMap<>();
 
     private double x;
     private double y;
@@ -22,20 +26,32 @@ public class CartesianCoordinate extends AbstractCoordinate{
         return z;
     }
 
-    private void setX(double x){ this.x = x; }
+    public static CartesianCoordinate valueOf(double x, double y, double z) {
+        CartesianCoordinate coordinate = putToCacheIfAbsentAndReturn(x,y,z);
 
-    private void setY(double y){
+        assert coordinate != null;
+
+        return coordinate;
+    }
+
+    private static CartesianCoordinate putToCacheIfAbsentAndReturn(double x, double y, double z){
+        int hash = Objects.hash(x, y, z);
+        if(!cache.containsKey(hash)){
+            synchronized (CartesianCoordinate.class){
+                if(!cache.containsKey(hash)) {
+                    CartesianCoordinate coordinate = new CartesianCoordinate(x, y, z);
+                    cache.put(coordinate.hashCode(), coordinate);
+                }
+            }
+        }
+
+        return cache.get(hash);
+    }
+
+    private CartesianCoordinate(double x, double y, double z){
+        this.x = x;
         this.y = y;
-    }
-
-    private void setZ(double z){
         this.z = z;
-    }
-
-    public CartesianCoordinate(double x, double y, double z){
-        setX(x);
-        setY(y);
-        setZ(z);
 
         assert this.x == x;
         assert this.y == y;
@@ -71,7 +87,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
     }
 
     @Override
-    protected SphericCoordinate doAsSphericCoordinate() {
+    protected SphericCoordinate doAsSphericCoordinate() throws CoordinateException {
 
             double x = getX();
             double y = getY();
@@ -86,15 +102,15 @@ public class CartesianCoordinate extends AbstractCoordinate{
             return sphericCoordinate;
     }
 
-    private SphericCoordinate basicToSphericCoordinate() {
+    private SphericCoordinate basicToSphericCoordinate() throws CoordinateException {
         double r = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
         if(r == 0){
-            return new SphericCoordinate(0d, 0d, 0d);
+            return SphericCoordinate.valueOf(0d, 0d, 0d);
         }
         double theta = Math.atan2(getY(),getX());
         double phi = Math.acos(getZ()/r);
 
-        return new SphericCoordinate(r,theta, phi);
+        return SphericCoordinate.valueOf(r,theta, phi);
     }
 
     @Override
@@ -106,9 +122,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
     protected boolean doIsEqual(Coordinate coordinate) throws CoordinateException {
         CartesianCoordinate coord = coordinate.asCartesianCoordinate();
 
-        return Math.abs(this.getX() - coord.getX()) <= DELTA
-                && Math.abs(this.getY() - coord.getY()) <= DELTA
-                && Math.abs(this.getZ() - coord.getZ()) <= DELTA;
+        return coord == this;
     }
 
     @Override
