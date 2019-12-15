@@ -24,7 +24,7 @@ public class SphericCoordinateTest extends AbstractCoordinateTest{
     /**
      *
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = CoordinateException.class)
     public void testNegativeRadiusCausesException() throws CoordinateException {
         SphericCoordinate.valueOf(-2d, 0d, 0d);
     }

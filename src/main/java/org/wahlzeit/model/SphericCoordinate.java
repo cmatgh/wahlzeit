@@ -24,9 +24,9 @@ public class SphericCoordinate extends AbstractCoordinate{
         return phi;
     }
 
-    public static SphericCoordinate valueOf(double radius, double theta, double phi) {
+    public static SphericCoordinate valueOf(double radius, double theta, double phi) throws CoordinateException {
         if(radius < 0){
-            throw new IllegalArgumentException("Radius of SphericCoordinate cannot be negative");
+            throw new CoordinateException("Radius of SphericCoordinate cannot be negative");
         }
 
         SphericCoordinate coordinate = doValueOf(radius, theta, phi);
