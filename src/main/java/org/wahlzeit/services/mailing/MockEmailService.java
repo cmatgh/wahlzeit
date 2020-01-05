@@ -21,12 +21,21 @@
 package org.wahlzeit.services.mailing;
 
 import org.wahlzeit.services.EmailAddress;
+import org.wahlzeit.utils.PatternInstance;
 
 import javax.mail.Message;
 
 /**
  * Abstract superclass for non-trivial EmailServer implementations.
  */
+@PatternInstance(
+		patternName = "Strategy",
+		participants = {"ConcreteStrategy"}
+)
+@PatternInstance(
+		patternName = "Template Method",
+		participants = {"ConcreteClass"}
+)
 public class MockEmailService extends AbstractEmailService {
 
 	/**
