@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 @PatternInstance(
 		patternName = "Singleton",
-		participants = {"SysConfig"}
+		participants = "Singleton"
 )
 public class SysConfig extends AbstractConfig {
 
