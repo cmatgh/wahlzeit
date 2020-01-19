@@ -32,7 +32,7 @@ import org.wahlzeit.utils.VersionTest;
         EmailServiceTestSuite.class,
         LandscapePhotoTestSuite.class,
         LandscapesMainTest.class,
-
+        LandscapeTestSuite.class
 })
 
 public class AllTests {

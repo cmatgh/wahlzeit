@@ -10,6 +10,7 @@ public class LandscapePhoto extends Photo{
     private String photographer;
     private String camera;
     private int exposure;
+    private Landscape landscape;
 
 
     public String getPhotographer() {
@@ -24,6 +25,10 @@ public class LandscapePhoto extends Photo{
         return exposure;
     }
 
+    public Landscape getLandscape() {
+        return landscape;
+    }
+
     public void setPhotographer(String photographer) {
         this.photographer = photographer;
     }
@@ -34,6 +39,10 @@ public class LandscapePhoto extends Photo{
 
     public void setExposure(int exposure) {
         this.exposure = exposure;
+    }
+
+    public void setLandscape(Landscape landscape) {
+        this.landscape = landscape;
     }
 
     /**
