@@ -1,9 +1,15 @@
 package org.wahlzeit.model;
 
+import org.wahlzeit.utils.PatternInstance;
+
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@PatternInstance(
+        patternName = "Value Object",
+        participants = { "ValueObject" }
+)
 public class LandscapeType {
 
     private static HashMap<String, LandscapeType> landscapeTypes = new HashMap<>();
@@ -104,6 +110,26 @@ public class LandscapeType {
         return iterator;
     }
 
+    public boolean hasSubType(String subType){
+        assertClassInvariants();
+        checkNotNull(subType);
+
+        boolean result = doHasSubType(subType);
+
+        assertClassInvariants();
+        return result;
+    }
+
+    private boolean doHasSubType(String subType){
+        if(this.name.equals(subType)) return true;
+
+        for(LandscapeType sub: subTypes){
+            if(sub.doHasSubType(subType)) return true;
+        }
+
+        return false;
+    }
+
     @Override
     public int hashCode() {
         assertClassInvariants();
@@ -129,4 +155,7 @@ public class LandscapeType {
         assert subTypes != null;
     }
 
+    protected static void clearMappings(){
+        landscapeTypes.clear();
+    }
 }

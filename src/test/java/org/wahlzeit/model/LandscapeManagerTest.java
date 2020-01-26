@@ -60,6 +60,13 @@ public class LandscapeManagerTest {
         landscapeManager.createSubType("SomeType", null);
     }
 
+    @Test(expected = LandscapeException.class)
+    public void testCreateSubTypeOnParentAlreadyHavingSameSubtype() throws LandscapeException {
+        LandscapeManager landscapeManager = LandscapeManager.getInstance();
+        LandscapeType subType = landscapeManager.createSubType("SomeType", "SubType");
+        landscapeManager.createSubType("SomeType", "SubType");
+    }
+
     @Test
     public void testCreateSubType() throws LandscapeException {
         LandscapeManager landscapeManager = LandscapeManager.getInstance();
