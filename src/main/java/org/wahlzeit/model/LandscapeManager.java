@@ -1,9 +1,14 @@
 package org.wahlzeit.model;
 
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.PatternInstance;
 
 import java.util.logging.Logger;
 
+@PatternInstance(
+        patternName = "Singleton",
+        participants = { "Singleton" }
+)
 public class LandscapeManager {
 
     private static LandscapeManager instance;
@@ -62,6 +67,8 @@ public class LandscapeManager {
 
     public LandscapeType createSubType(LandscapeType parent, String subtype) throws LandscapeException{
         try{
+            checkNotASubtypeOf(parent, subtype);
+
             return doCreateSubType(parent, subtype);
         }catch (IllegalArgumentException | NullPointerException ex){
             log.warning(LogBuilder.createSystemMessage().
@@ -70,8 +77,14 @@ public class LandscapeManager {
         }
     }
 
-    private LandscapeType doCreateSubType(LandscapeType parent, String subType){
+    private LandscapeType doCreateSubType(LandscapeType parent, String subType) {
         parent.addSubType(LandscapeType.valueOf(subType));
         return LandscapeType.valueOf(subType);
+    }
+
+    private void checkNotASubtypeOf(LandscapeType parent, String subType) throws LandscapeException{
+        if(parent.hasSubType(subType)){
+            throw new LandscapeException("subtype already present in subtree, please remove subtype first");
+        }
     }
 }

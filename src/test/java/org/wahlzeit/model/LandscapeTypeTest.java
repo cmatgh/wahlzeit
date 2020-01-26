@@ -1,10 +1,18 @@
 package org.wahlzeit.model;
 
+import org.junit.Before;
 import org.junit.Test;
+
+import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
 
 public class LandscapeTypeTest {
+
+    @Before
+    public void resetSingleton(){
+        LandscapeType.clearMappings();
+    }
 
     @Test(expected = NullPointerException.class)
     public void testDoValueOfOnNullThrowsException(){
@@ -59,5 +67,31 @@ public class LandscapeTypeTest {
         assertTrue(landscape.getLandscapeType() == LandscapeType.valueOf(name));
     }
 
+    @Test
+    public void testHasSubTypeOnAlreadyExistingSubType(){
+        LandscapeType parent = LandscapeType.valueOf("parent");
+        LandscapeType child = LandscapeType.valueOf("child");
+        parent.addSubType(child);
+        LandscapeType childChild = LandscapeType.valueOf("childChild");
+        child.addSubType(childChild);
+
+        assertTrue(parent.hasSubType("childChild"));
+    }
+
+    @Test
+    public void testHasSubTypeOnSelf(){
+        LandscapeType parent = LandscapeType.valueOf("parent");
+
+        assertTrue(parent.hasSubType("parent"));
+    }
+
+    @Test
+    public void testHasSubTypeOnNotExistingType(){
+        LandscapeType parent = LandscapeType.valueOf("parent");
+        LandscapeType child = LandscapeType.valueOf("child");
+        parent.addSubType(child);
+
+        assertFalse(parent.hasSubType("childChild"));
+    }
 
 }
