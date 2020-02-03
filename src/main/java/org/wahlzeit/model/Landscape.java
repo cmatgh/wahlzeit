@@ -2,7 +2,36 @@ package org.wahlzeit.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class Landscape{
+/*
+ *
+ * LandscapePhoto/Landscape
+ * public collaboration ClientService{
+ *   public role Client{
+ *      // no methods
+ *   }
+ *
+ *   public role Service{
+ *       public getService();
+ *   }
+ *}
+ *
+ */
+
+/*
+ *
+ * Landscape/LandscapeType
+ * public collaboration TypeObject{
+ *   public role BaseObject{
+ *      public void setTypeObject(TypeObject to);
+ *   }
+ *
+ *   public role TypeObject{
+ *       public BaseObject createInstance();
+ *   }
+ *}
+ *
+ */
+public class Landscape /* binds ClientService.Service */ /* binds TypeObject.BaseObject */{
 
     private Location location;
 
@@ -16,6 +45,9 @@ public class Landscape{
         this.location = location;
     }
 
+    /*
+    * TypeObject.BaseObject::setTypeObject(TypeObject to)
+     */
     public Landscape(LandscapeType landscapeType){
         checkNotNull(landscapeType);
 

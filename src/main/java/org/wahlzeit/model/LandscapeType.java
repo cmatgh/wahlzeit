@@ -6,11 +6,44 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+
+/*
+ *
+ * LandscapeType/LandscapeType
+ * public collaboration ParentChild{
+ *   public role Parent{
+ *      public void addChild(Child c);
+ *      public void removeChild(Child c);
+ *      public Iterator<Child> getIterator();
+ *   }
+ *
+ *   public role Child{
+ *      public void setParent(Parent p);
+ *      public Parent getParent();
+ *   }
+ *}
+ *
+ */
+
+/*
+ *
+ * Landscape/LandscapeType
+ * public collaboration TypeObject{
+ *   public role BaseObject{
+ *      public void setTypeObject(TypeObject to);
+ *   }
+ *
+ *   public role TypeObject{
+ *       public BaseObject createInstance();
+ *   }
+ *}
+ *
+ */
 @PatternInstance(
         patternName = "Value Object",
         participants = { "ValueObject" }
 )
-public class LandscapeType {
+public class LandscapeType /* binds TypeObject.TypeObject */ /* binds ParentChild.Parent */ /* binds ParentChild.Child */{
 
     private static HashMap<String, LandscapeType> landscapeTypes = new HashMap<>();
 
@@ -19,10 +52,16 @@ public class LandscapeType {
 
     private String name;
 
+    /*
+    * ParentChild.Child::setParent(Parent o)
+     */
     private void setSuperType(LandscapeType landscapeType) {
         this.superType = landscapeType;
     }
 
+    /*
+     * ParentChild.Child::getParent()
+     */
     public LandscapeType getSuperType() {
         return superType;
     }
@@ -75,7 +114,9 @@ public class LandscapeType {
         return superType != null;
     }
 
-
+    /*
+     * ParentChild.Parent::addChild(Child c)
+     */
     public void addSubType(LandscapeType landscapeType) {
         assertClassInvariants();
         checkNotNull(landscapeType);
@@ -92,6 +133,9 @@ public class LandscapeType {
         subTypes.add(landscapeType);
     }
 
+    /*
+    * TypeObject.TypeObject::createInstance()
+     */
     public Landscape createInstance(){
         assertClassInvariants();
 
@@ -101,6 +145,9 @@ public class LandscapeType {
         return landscape;
     }
 
+    /*
+     * ParentChild.Parent::getIterator()
+     */
     public Iterator<LandscapeType> getSubTypeIterator() {
         assertClassInvariants();
 
